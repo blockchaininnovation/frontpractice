@@ -1,0 +1,24 @@
+{
+  "name": "wagmi-project",
+  "dockerComposeFile": "./wagmi-project/docker-compose.yml",
+  "service": "wagmi-project",
+  "workspaceFolder": "/home/node/app",
+  "forwardPorts": [3000],
+  "customizations": {
+    // Configure properties specific to VS Code.
+    "vscode": {
+      // Add the IDs of extensions you want installed when the container is created.
+      "extensions": [
+        "streetsidesoftware.code-spell-checker",
+        "oderwat.indent-rainbow",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "formulahendry.auto-rename-tag",
+        "dbaeumer.vscode-eslint",
+        "vscode-icons-team.vscode-icons",
+        "GitHub.copilot",
+        "GitHub.copilot-chat"
+      ]
+    }
+  }
+}

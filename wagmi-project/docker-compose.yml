@@ -1,0 +1,18 @@
+services:
+  wagmi-project:
+    build: .
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/home/node/app
+      - node_modules:/home/node/app/node_modules
+    command: tail -f /dev/null
+    networks:
+      - anvil
+
+volumes:
+  node_modules:
+
+networks:
+  anvil:
+    external: true
