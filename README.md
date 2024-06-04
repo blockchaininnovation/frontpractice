@@ -7,10 +7,14 @@
 ## 目次
 
 - [環境構築](#環境構築)
+
   - [nvm ( Node Version Manager ) のインストール](#nvm-node-version-manager-のインストール)
     - [Mac](#mac)
     - [Windows](#windows)
   - [Node.js のインストール](#nodejs-のインストール)
+
+- [このレポジトリについて](#このレポジトリについて)
+  - [仕様](#仕様)
 
 ---
 
@@ -129,3 +133,18 @@
   ```cmd
   npm --version
   ```
+
+# このレポジトリについて
+
+## 仕様
+
+- 対応ブラウザ： Chrome ( JavaScript を許可してください )
+- 対応デバイス： PC
+- 対応ウォレット： MetaMask ( Chrome 拡張機能 )
+
+## 使用パッケージ
+
+- `wagmi` : latest ( 10.7.0 )
+- `tailwindcss` : ^3.4.3
+- `typescript` : ^5.2.2
+- `shadcn-ui` : 0.8.0
