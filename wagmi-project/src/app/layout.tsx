@@ -6,6 +6,7 @@ import { type ReactNode } from "react";
 import { Providers } from "./providers";
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,6 +26,7 @@ export default function RootLayout(props: { children: ReactNode }) {
           <Providers>
             <Navbar />
             {props.children}
+            <Toaster />
           </Providers>
         </div>
       </body>
