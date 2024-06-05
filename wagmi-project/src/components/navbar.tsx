@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 
@@ -24,7 +26,7 @@ export default function Navbar() {
   const { toast } = useToast();
 
   return (
-    <>
+    <div className="relative">
       <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 justify-between">
         <nav>
           <Link href="/" className="flex items-center gap-2 font-semibold">
@@ -90,7 +92,7 @@ export default function Navbar() {
         </div>
       </header>
       {account.status === "connected" && account.chainId !== 11155111 && (
-        <Alert variant="destructive" className="w-80 ml-auto mt-10">
+        <Alert variant="destructive" className="w-80 right-0 mt-10 absolute">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Chain Not Supported</AlertTitle>
           <AlertDescription>
@@ -99,6 +101,6 @@ export default function Navbar() {
           </AlertDescription>
         </Alert>
       )}
-    </>
+    </div>
   );
 }
