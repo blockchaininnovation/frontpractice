@@ -22,7 +22,7 @@ export default function RootLayout(props: { children: ReactNode }) {
         <div className="col-span-1">
           <Sidebar />
         </div>
-        <div className="col-span-5">
+        <div className="col-span-5 border-l">
           <Providers>
             <Navbar />
             {props.children}
