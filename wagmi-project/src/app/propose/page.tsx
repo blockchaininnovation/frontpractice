@@ -2,33 +2,41 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
-import { useWriteContract } from "wagmi";
+import { useWriteContract, type BaseError } from "wagmi";
 import { Address, toHex } from "viem";
 
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
+import FormInput from "@/components/form-input";
 
 import { abi } from "@/lib/abi/TextDAOFacade";
-import { proposalSchema } from "@/lib/schema";
+import { proposalSchema, type proposalSchemaType } from "@/lib/schema/schema";
 import { account } from "@/lib/account";
+
+const INPUTS = [
+  {
+    name: "header.id",
+    label: "Header ID",
+    placeholder: "1",
+    _type: "number",
+    description: "ヘッダーに付与したい ID を入力してください。",
+  },
+  {
+    name: "header.metadataURI",
+    label: "Metadata URI",
+    placeholder: "123",
+    _type: "text",
+    description: "Test",
+  },
+];
 
 export default function ProposePage() {
   const { isPending, writeContract } = useWriteContract();
   const { toast } = useToast();
 
-  const form = useForm<z.infer<typeof proposalSchema>>({
+  const form = useForm<proposalSchemaType>({
     resolver: zodResolver(proposalSchema),
     defaultValues: {
       header: {
@@ -41,7 +49,7 @@ export default function ProposePage() {
     },
   });
 
-  function handleSubmit(data: z.infer<typeof proposalSchema>) {
+  function handleSubmit(data: proposalSchemaType) {
     const args = {
       header: {
         id: BigInt(data.header.id),
@@ -65,7 +73,7 @@ export default function ProposePage() {
         createdAt: BigInt(0),
       },
     };
-    console.log(data);
+
     writeContract(
       {
         address: process.env.NEXT_PUBLIC_CONTRACT_ADDR! as Address,
@@ -78,16 +86,23 @@ export default function ProposePage() {
         onSuccess: (data) => {
           toast({
             title: "Transaction confirmed",
-            description: `Transaction Hash: ${data}`,
+            description: (
+              <div className="w-80 break-words">
+                {`Transaction Hash: ${data}`}
+              </div>
+            ),
           });
         },
         onError: (error) => {
           toast({
             variant: "destructive",
             title: error.name,
-            description: error.message,
+            description: (
+              <div className="w-80 break-words">
+                {(error as BaseError).shortMessage}
+              </div>
+            ),
           });
-          console.log(error.message);
         },
       }
     );
@@ -98,46 +113,17 @@ export default function ProposePage() {
       <h1 className="text-xl font-bold py-10">Propose Page</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="header.id"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Header ID</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="1"
-                    {...field}
-                    className="w-1/3"
-                    type="number"
-                  />
-                </FormControl>
-                <FormDescription>
-                  ヘッダーに付与したい ID を入力してください。
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="header.metadataURI"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Metadata URI</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="123"
-                    {...field}
-                    className="w-1/3"
-                    type="text"
-                  />
-                </FormControl>
-                <FormDescription>Test</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {INPUTS.map((input) => (
+            <FormInput
+              key={input.name}
+              _form={form}
+              name={input.name}
+              label={input.label}
+              placeholder={input.placeholder}
+              _type={input._type}
+              description={input.description}
+            />
+          ))}
           <Button type="submit">
             {isPending ? "Confirming..." : "Submit"}
           </Button>
