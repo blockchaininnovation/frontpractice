@@ -18,7 +18,7 @@ import {
 import { useToast } from "./ui/use-toast";
 
 import paths from "@/lib/paths";
-import gitIcon from "public/githubIcon.png";
+import logo from "public/rectangular_logo_only.png";
 
 export default function Navbar() {
   const account = useAccount();
@@ -34,7 +34,7 @@ export default function Navbar() {
             href={paths.home()}
             className="flex items-center gap-2 font-semibold"
           >
-            <Image src={gitIcon} alt="Logo" width={40} height={40} priority />
+            <Image src={logo} alt="Logo" width={40} height={40} priority />
             <span>Tokyo University</span>
           </Link>
         </nav>
