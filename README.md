@@ -92,13 +92,18 @@
        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
        ```
 
-    4. 以下のコマンドを実行し、正常にインストールされているか確認 ( `nvm` と表示されたら OK )
+    4. 以下のコマンドを実行し、正常にインストールされているか確認
 
-       ```zsh
-       command -v nvm
+       ```ubuntu
+       nvm -v
        ```
-
-       - `nvm: command not found` が出る場合、現在のターミナルを閉じてから再度開き、もう一度やり直してください
+       - `0.39.7`等，バージョン情報が出てくればOKです
+       - `Command 'nvm' not found ...` が出る場合、現在のターミナルを閉じてから再度開き、もう一度やり直してください
+       - もしくは
+          ```ubuntu
+          source ~/.bashrc
+          ```
+          と実行したあとに再度「nvm --help」を打ってみてください．
 
 ---
 
