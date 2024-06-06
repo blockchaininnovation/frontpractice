@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import paths from "@/lib/paths";
+
 export default function Sidebar() {
   return (
     <div className="flex flex-col justify-around items-center min-h-screen">
@@ -23,8 +25,8 @@ export default function Sidebar() {
           className="grid gap-4 text-sm text-muted-foreground mt-6"
           x-chunk="dashboard-04-chunk-0"
         >
-          <Link href="/initialize">Initialize</Link>
-          <Link href="/propose">Propose</Link>
+          <Link href={paths.initialize()}>Initialize</Link>
+          <Link href={paths.propose()}>Propose</Link>
           <Link href="#">Integrations</Link>
           <Link href="#">Support</Link>
           <Link href="#">Organizations</Link>

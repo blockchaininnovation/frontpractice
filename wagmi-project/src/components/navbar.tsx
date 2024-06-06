@@ -17,6 +17,7 @@ import {
 } from "@radix-ui/react-tooltip";
 import { useToast } from "./ui/use-toast";
 
+import paths from "@/lib/paths";
 import gitIcon from "public/githubIcon.png";
 
 export default function Navbar() {
@@ -29,7 +30,10 @@ export default function Navbar() {
     <div className="relative">
       <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 justify-between">
         <nav>
-          <Link href="/" className="flex items-center gap-2 font-semibold">
+          <Link
+            href={paths.home()}
+            className="flex items-center gap-2 font-semibold"
+          >
             <Image src={gitIcon} alt="Logo" width={40} height={40} priority />
             <span>Tokyo University</span>
           </Link>
