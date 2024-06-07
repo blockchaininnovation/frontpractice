@@ -61,21 +61,32 @@ const INPUTS = [
   },
 ];
 
+const DEFAULT_VALUES = {
+  initialMembers: "",
+  pConfigSchema: {
+    expiryDuration: 0,
+    tallyInterval: 0,
+    repsNum: 0,
+    quorumScore: 0,
+  },
+};
+
 export default function InitializePage() {
-  const { isPending, writeContract } = useWriteContract();
   const { toast } = useToast();
+  const { isPending, writeContract } = useWriteContract({
+    mutation: {
+      retry: 3,
+      onMutate: () =>
+        toast({
+          title: "Sending transaction...",
+          description: "This may take a while. Please wait...",
+        }),
+    },
+  });
 
   const form = useForm<initializeSchemaType>({
     resolver: zodResolver(initializeSchema),
-    defaultValues: {
-      initialMembers: "",
-      pConfigSchema: {
-        expiryDuration: 0,
-        tallyInterval: 0,
-        repsNum: 0,
-        quorumScore: 0,
-      },
-    },
+    defaultValues: DEFAULT_VALUES,
   });
 
   function handleSubmit(data: initializeSchemaType) {
@@ -104,22 +115,14 @@ export default function InitializePage() {
         onSuccess: (data) => {
           toast({
             title: "Transaction confirmed",
-            description: (
-              <div className="w-80 break-words">
-                {`Transaction Hash: ${data}`}
-              </div>
-            ),
+            description: `Transaction Hash: ${data}`,
           });
         },
         onError: (error) => {
           toast({
             variant: "destructive",
             title: error.name,
-            description: (
-              <div className="w-80 break-words">
-                {(error as BaseError).shortMessage}
-              </div>
-            ),
+            description: (error as BaseError).shortMessage,
           });
         },
       }
@@ -142,7 +145,7 @@ export default function InitializePage() {
               description={input.description}
             />
           ))}
-          <Button type="submit">
+          <Button type="submit" disabled={isPending}>
             {isPending ? "Confirming..." : "Submit"}
           </Button>
         </form>
