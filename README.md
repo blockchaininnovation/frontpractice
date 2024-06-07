@@ -97,13 +97,14 @@
        ```ubuntu
        nvm -v
        ```
-       - `0.39.7`等，バージョン情報が出てくればOKです
+
+       - `0.39.7`等，バージョン情報が出てくれば OK です
        - `Command 'nvm' not found ...` が出る場合、現在のターミナルを閉じてから再度開き、もう一度やり直してください
        - もしくは
-          ```ubuntu
-          source ~/.bashrc
-          ```
-          と実行したあとに再度「nvm -v」を打ってみてください．
+         ```ubuntu
+         source ~/.bashrc
+         ```
+         と実行したあとに再度「nvm -v」を打ってみてください．
 
 ---
 
@@ -146,6 +147,11 @@
 - 対応ブラウザ： Chrome ( JavaScript を許可してください )
 - 対応デバイス： PC
 - 対応ウォレット： MetaMask ( Chrome 拡張機能 )
+- local Storage を使用
+
+- Indexer 無し
+- DB 無し
+- Backend ( Server, Server Action ) 無し
 
 ## 使用パッケージ
 
@@ -153,3 +159,42 @@
 - `tailwindcss` : ^3.4.3
 - `typescript` : ^5.2.2
 - `shadcn-ui` : 0.8.0
+- `react-hook-form`: ^7.51.5
+
+## 始め方
+
+1. レポジトリをクローンする
+
+   - SSH を設定してある場合
+
+     ```cmd
+     git clone git@github.com:blockchaininnovation/frontpractice.git
+     ```
+
+   - HTTPS を使用する場合
+
+     ```cmd
+     git clone https://github.com/blockchaininnovation/frontpractice.git
+     ```
+
+2. クローンしたディレクトリに移動し、以下のコマンドを実行
+
+   ```cmd
+   cd wagmi-project
+   ```
+
+   ```cmd
+   npm install
+   ```
+
+   ```cmd
+   npm build
+   ```
+
+   ```cmd
+   npm start
+   ```
+
+3. ブラウザで以下にアクセス
+
+   http://localhost:3000 または http://127.0.0.1:3000
