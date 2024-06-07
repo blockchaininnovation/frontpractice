@@ -1,7 +1,10 @@
 "use client";
 
+import { useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
 
 import { useWriteContract, type BaseError } from "wagmi";
 import { Address, toHex } from "viem";
@@ -13,48 +16,90 @@ import FormInput from "@/components/form-input";
 
 import { abi } from "@/lib/abi/TextDAOFacade";
 import { proposalSchema, type proposalSchemaType } from "@/lib/schema/schema";
+import { createNewProposal, queryClient } from "@/lib/http";
 import { account } from "@/lib/account";
 
 const INPUTS = [
   {
-    name: "header.id",
+    name: "id",
     label: "Header ID",
     placeholder: "1",
     _type: "number",
     description: "ヘッダーに付与したい ID を入力してください。",
   },
   {
-    name: "header.metadataURI",
-    label: "Metadata URI",
-    placeholder: "123",
+    name: "title",
+    label: "Title",
+    placeholder: "Proposal Title",
     _type: "text",
-    description: "Test",
+    description: "提案のタイトルを入力してください。",
+  },
+  {
+    name: "description",
+    label: "Description",
+    placeholder: "Proposal Description",
+    _type: "text",
+    description: "提案の詳細を入力してください。",
   },
 ];
 
-export default function ProposePage() {
-  const { isPending, writeContract } = useWriteContract();
-  const { toast } = useToast();
+const DEFAULT_VALUES = {
+  id: 0,
+  title: "",
+  description: "",
+};
 
-  const form = useForm<proposalSchemaType>({
-    resolver: zodResolver(proposalSchema),
-    defaultValues: {
-      header: {
-        id: 0,
-        metadataURI: "",
-      },
-      proposalMeta: {
-        createdAt: 0,
-      },
+export default function ProposePage() {
+  const [isHandling, setIsHandling] = useState(false);
+  const { toast } = useToast();
+  const { writeContract, isError } = useWriteContract({
+    mutation: {
+      retry: 3,
+      onMutate: () =>
+        toast({
+          title: "Sending transaction...",
+          description: "This may take a while. Please wait...",
+        }),
     },
   });
 
-  function handleSubmit(data: proposalSchemaType) {
+  const { mutateAsync } = useMutation({
+    mutationFn: createNewProposal,
+    onMutate: () => {
+      setIsHandling(true);
+      toast({
+        title: "Uploading to IPFS...",
+        description: "This may take a while. Please wait...",
+      });
+    },
+    onSuccess: (data) => {
+      localStorage.setItem("IPFS_CID", data);
+      toast({
+        title: "Success to upload to IPFS",
+        description: "Proposal data is uploaded.",
+      });
+    },
+    onError: (error) => {
+      setIsHandling(false);
+      toast({
+        variant: "destructive",
+        title: error.name,
+        description: error.message,
+      });
+    },
+  });
+
+  const form = useForm<proposalSchemaType>({
+    resolver: zodResolver(proposalSchema),
+    defaultValues: DEFAULT_VALUES,
+  });
+
+  function sendTransaction(id: number, ipfs_cid: string) {
     const args = {
       header: {
-        id: BigInt(data.header.id),
+        id: BigInt(id),
         currentScore: BigInt(0),
-        metadataURI: toHex(data.header.metadataURI, { size: 32 }),
+        metadataURI: toHex(ipfs_cid, { size: 32 }),
         tagIds: [],
       },
       cmd: {
@@ -84,28 +129,40 @@ export default function ProposePage() {
       },
       {
         onSuccess: (data) => {
+          setIsHandling(false);
+          localStorage.removeItem("IPFS_CID");
           toast({
             title: "Transaction confirmed",
-            description: (
-              <div className="w-80 break-words">
-                {`Transaction Hash: ${data}`}
-              </div>
-            ),
+            description: `Transaction Hash: ${data}`,
           });
         },
         onError: (error) => {
+          setIsHandling(false);
           toast({
             variant: "destructive",
             title: error.name,
             description: (
-              <div className="w-80 break-words">
-                {(error as BaseError).shortMessage}
-              </div>
+              <>
+                {(error as BaseError).shortMessage} <br />
+                Please try again.
+              </>
             ),
           });
         },
       }
     );
+  }
+
+  async function handleSubmit(data: proposalSchemaType) {
+    if (isError) {
+      console.log("isError");
+      setIsHandling(true);
+      const ipfs_cid = localStorage.getItem("IPFS_CID");
+      sendTransaction(data.id, ipfs_cid!);
+      return;
+    }
+    const ipfs_cid = await mutateAsync(data);
+    sendTransaction(data.id, ipfs_cid);
   }
 
   return (
@@ -124,8 +181,8 @@ export default function ProposePage() {
               description={input.description}
             />
           ))}
-          <Button type="submit">
-            {isPending ? "Confirming..." : "Submit"}
+          <Button type="submit" disabled={isHandling}>
+            {isHandling ? "Creating..." : "Submit"}
           </Button>
         </form>
       </Form>
