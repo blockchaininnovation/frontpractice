@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { uint256Schema, bytes32Schema, addressArraySchema } from "./common";
+import { uint256Schema, addressArraySchema } from "./common";
 
 // Initialize schema
 export const pConfigSchema = z.object({
@@ -16,18 +16,12 @@ export const initializeSchema = z.object({
 });
 
 // Proposal schema
-export const headerSchema = z.object({
-  id: uint256Schema,
-  metadataURI: bytes32Schema,
-});
-
-export const proposalMetaSchema = z.object({
-  createdAt: uint256Schema,
-});
-
 export const proposalSchema = z.object({
-  header: headerSchema,
-  proposalMeta: proposalMetaSchema,
+  id: uint256Schema,
+  title: z.string().min(1, "Title must be at least 1 character long"),
+  description: z
+    .string()
+    .min(1, "Description must be at least 1 character long"),
 });
 
 export type initializeSchemaType = z.infer<typeof initializeSchema>;
