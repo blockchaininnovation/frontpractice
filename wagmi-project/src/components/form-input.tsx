@@ -1,4 +1,10 @@
 import {
+  type UseFormReturn,
+  type FieldValues,
+  type Path,
+} from "react-hook-form";
+
+import {
   FormField,
   FormItem,
   FormLabel,
@@ -8,23 +14,23 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 
-interface FormInputProps {
-  _form: any;
-  name: string;
+interface FormInputProps<T extends FieldValues> {
+  _form: UseFormReturn<T>;
+  name: Path<T>;
   label: string;
   placeholder: string;
   _type: string;
   description: string;
 }
 
-export default function FormInput({
+export default function FormInput<T extends FieldValues>({
   _form,
   name,
   label,
   placeholder,
   _type,
   description,
-}: FormInputProps) {
+}: FormInputProps<T>) {
   return (
     <FormField
       control={_form.control}

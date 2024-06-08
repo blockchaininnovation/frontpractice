@@ -1,4 +1,10 @@
 import {
+  type UseFormReturn,
+  type FieldValues,
+  type Path,
+} from "react-hook-form";
+
+import {
   FormField,
   FormItem,
   FormLabel,
@@ -8,21 +14,21 @@ import {
 } from "./ui/form";
 import { Textarea } from "./ui/textarea";
 
-interface FormTextareaProps {
-  _form: any;
-  name: string;
+interface FormTextareaProps<T extends FieldValues> {
+  _form: UseFormReturn<T>;
+  name: Path<T>;
   label: string;
   placeholder: string;
   description: string;
 }
 
-export default function FormTextarea({
+export default function FormTextarea<T extends FieldValues>({
   _form,
   name,
   label,
   placeholder,
   description,
-}: FormTextareaProps) {
+}: FormTextareaProps<T>) {
   return (
     <FormField
       control={_form.control}

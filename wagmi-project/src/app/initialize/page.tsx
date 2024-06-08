@@ -135,10 +135,10 @@ export default function InitializePage() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
           {INPUTS.map((input) => (
-            <FormInput
+            <FormInput<initializeSchemaType>
               key={input.name}
               _form={form}
-              name={input.name}
+              name={input.name as keyof initializeSchemaType}
               label={input.label}
               placeholder={input.placeholder}
               _type={input._type}
