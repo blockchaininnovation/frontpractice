@@ -21,6 +21,11 @@ import { createNewProposal, queryClient } from "@/lib/http";
 import { getDigest } from "@/lib/helper";
 import { account } from "@/lib/account";
 
+//test
+import { useWaitForTransactionReceipt } from "wagmi";
+import { getStorageAt } from "@wagmi/core";
+import { config } from "@/wagmi";
+
 const INPUTS = [
   {
     name: "id",
@@ -36,13 +41,6 @@ const INPUTS = [
     _type: "text",
     description: "提案のタイトルを入力してください。",
   },
-  {
-    name: "description",
-    label: "Description",
-    placeholder: "Proposal Description",
-    _type: "text",
-    description: "提案の詳細を入力してください。",
-  },
 ];
 
 const DEFAULT_VALUES = {
@@ -54,7 +52,11 @@ const DEFAULT_VALUES = {
 export default function ProposePage() {
   const [isHandling, setIsHandling] = useState(false);
   const { toast } = useToast();
-  const { writeContract, isError } = useWriteContract({
+  const {
+    writeContract,
+    isError,
+    data: hash,
+  } = useWriteContract({
     mutation: {
       retry: 3,
       onMutate: () =>
@@ -63,6 +65,10 @@ export default function ProposePage() {
           description: "This may take a while. Please wait...",
         }),
     },
+  });
+
+  const { data, isSuccess } = useWaitForTransactionReceipt({
+    hash,
   });
 
   const { mutateAsync } = useMutation({
@@ -175,17 +181,17 @@ export default function ProposePage() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
           {INPUTS.map((input) => (
-            <FormInput
+            <FormInput<proposalSchemaType>
               key={input.name}
               _form={form}
-              name={input.name}
+              name={input.name as keyof proposalSchemaType}
               label={input.label}
               placeholder={input.placeholder}
               _type={input._type}
               description={input.description}
             />
           ))}
-          <FormTextarea
+          <FormTextarea<proposalSchemaType>
             _form={form}
             name="description"
             label="Description"
@@ -197,6 +203,20 @@ export default function ProposePage() {
           </Button>
         </form>
       </Form>
+      {isSuccess && (
+        <Button
+          onClick={async () => {
+            console.log(data);
+            const a = await getStorageAt(config, {
+              address: process.env.NEXT_PUBLIC_CONTRACT_ADDR! as Address,
+              slot: "0x9a70c69f78b954ec2ace8c62308c5ea2ed35f782ee583f10b56d88886fa99300",
+            });
+            console.log(a);
+          }}
+        >
+          check
+        </Button>
+      )}
     </div>
   );
 }
