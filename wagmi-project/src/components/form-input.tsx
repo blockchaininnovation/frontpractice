@@ -36,7 +36,6 @@ export default function FormInput({
             <Input
               placeholder={placeholder}
               {...field}
-              className="w-1/3"
               type={_type}
               onFocus={(e) => e.currentTarget.select()}
             />
