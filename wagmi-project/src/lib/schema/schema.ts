@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { uint256Schema, addressArraySchema } from "./common";
+import { uint256Schema, addressSchema, addressArraySchema } from "./common";
 
 // Initialize schema
 export const pConfigSchema = z.object({
@@ -24,5 +24,24 @@ export const proposalSchema = z.object({
     .min(1, "Description must be at least 1 character long"),
 });
 
+// Tally schema
+export const tallySchema = z.object({
+  pid: uint256Schema,
+});
+
+// MemberJoin schema
+export const memberSchema = z.object({
+  id: uint256Schema,
+  addr: addressSchema,
+});
+
+export const memberJoinSchema = z.object({
+  pid: uint256Schema,
+  candidates: memberSchema,
+});
+
+// Types
 export type initializeSchemaType = z.infer<typeof initializeSchema>;
 export type proposalSchemaType = z.infer<typeof proposalSchema>;
+export type tallySchemaType = z.infer<typeof tallySchema>;
+export type memberJoinSchemaType = z.infer<typeof memberJoinSchema>;
