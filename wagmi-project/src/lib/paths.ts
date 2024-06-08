@@ -8,6 +8,12 @@ const paths = {
   propose() {
     return "/propose";
   },
+  tally() {
+    return "/tally";
+  },
+  memberJoin() {
+    return "/memberJoin";
+  },
   vote() {
     return "/vote";
   },
