@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import FormInput from "@/components/form-input";
+import FormTextarea from "@/components/form-textarea";
 
 import { abi } from "@/lib/abi/TextDAOFacade";
 import { proposalSchema, type proposalSchemaType } from "@/lib/schema/schema";
@@ -184,6 +185,13 @@ export default function ProposePage() {
               description={input.description}
             />
           ))}
+          <FormTextarea
+            _form={form}
+            name="description"
+            label="Description"
+            placeholder="Proposal Description"
+            description="提案の詳細を入力してください。"
+          />
           <Button type="submit" disabled={isHandling}>
             {isHandling ? "Creating..." : "Submit"}
           </Button>
