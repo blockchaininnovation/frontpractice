@@ -35,7 +35,7 @@ export default function Navbar() {
             className="flex items-center gap-2 font-semibold"
           >
             <Image src={logo} alt="Logo" width={40} height={40} priority />
-            <span>Tokyo University</span>
+            <span>Blockchain Innovation</span>
           </Link>
         </nav>
         <div>
