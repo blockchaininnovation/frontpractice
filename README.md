@@ -188,7 +188,7 @@
    ```
 
    ```cmd
-   npm build
+   npm run build
    ```
 
    ```cmd
