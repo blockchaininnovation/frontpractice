@@ -192,8 +192,15 @@
    ```
 
    ```cmd
-   npm start
+   npm run start
    ```
+
+もしくは，run build, run startの代わりに開発モードとして
+
+   ```cmd
+   npm run dev
+   ```
+
 
 3. ブラウザで以下にアクセス
 
