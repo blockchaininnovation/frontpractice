@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { useWriteContract, type BaseError } from "wagmi";
-import { Address, getAddress } from "viem";
+import { getAddress, type Address } from "viem";
 
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";

@@ -17,6 +17,9 @@ const paths = {
   vote() {
     return "/vote";
   },
+  call() {
+    return "/call";
+  },
 };
 
 export default paths;
