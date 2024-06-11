@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { toHex, size } from "viem";
+
 import { uint256Schema, addressSchema, addressArraySchema } from "./common";
 
 // Initialize schema
@@ -24,6 +26,22 @@ export const proposalSchema = z.object({
     .min(1, "Description must be at least 1 character long"),
 });
 
+export const proposalSchemaNoIPFS = z.object({
+  id: uint256Schema,
+  title: z
+    .string()
+    .min(1, "Title must be at least 1 character long")
+    .refine(
+      (val) => {
+        const title = toHex(val);
+        return size(title) <= 32;
+      },
+      {
+        message: "Title must be less than 32 bytes",
+      }
+    ),
+});
+
 // Tally schema
 export const tallySchema = z.object({
   pid: uint256Schema,
@@ -40,8 +58,22 @@ export const memberJoinSchema = z.object({
   candidates: memberSchema,
 });
 
+// Contract Call schema
+export const contractCallPidSchema = z.object({
+  pid: uint256Schema,
+});
+
+export const contractCallMemberIdSchema = z.object({
+  memberID: uint256Schema,
+});
+
 // Types
 export type initializeSchemaType = z.infer<typeof initializeSchema>;
 export type proposalSchemaType = z.infer<typeof proposalSchema>;
+export type proposalSchemaNoIPFSType = z.infer<typeof proposalSchemaNoIPFS>;
 export type tallySchemaType = z.infer<typeof tallySchema>;
 export type memberJoinSchemaType = z.infer<typeof memberJoinSchema>;
+export type contractCallPidSchemaType = z.infer<typeof contractCallPidSchema>;
+export type contractCallMemberIdSchemaType = z.infer<
+  typeof contractCallMemberIdSchema
+>;
