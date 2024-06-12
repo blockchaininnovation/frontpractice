@@ -5,14 +5,15 @@ import paths from "@/lib/paths";
 export default function Sidebar() {
   return (
     <div className="flex flex-col justify-around items-center min-h-screen">
-      <div>
+      <div className="w-36">
         <h1 className="text-xl font-semibold">Participants</h1>
         <nav className="grid gap-4 text-sm text-muted-foreground mt-6">
           <Link href={paths.memberJoin()}>Member Join</Link>
           <Link href={paths.vote()}>Vote</Link>
+          <Link href={paths.call()}>Contract Call</Link>
         </nav>
       </div>
-      <div>
+      <div className="w-36">
         <h1 className="text-xl font-semibold">Lecturer</h1>
         <nav
           className="grid gap-4 text-sm text-muted-foreground mt-6"
