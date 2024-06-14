@@ -101,17 +101,11 @@ export default function ContractCallPage() {
   function getProposalData(data: contractCallPidSchemaType) {
     setPid(data.pid);
     proposalRefetch();
-    console.log(proposalInfo);
-    console.log(proposalHeaders);
-    console.log(nextProposalId);
-    console.log(proposalConfig);
   }
 
   function getMemberData(data: contractCallMemberIdSchemaType) {
     setMemberID(data.memberID);
     memberRefetch();
-    console.log(memberInfo);
-    console.log(nextMemberId);
   }
 
   return (
@@ -198,10 +192,6 @@ export default function ContractCallPage() {
           </div>
         </CardFooter>
       </Card>
-
-      <div>
-        <h2 className=" font-semibold my-5"></h2>
-      </div>
     </div>
   );
 }

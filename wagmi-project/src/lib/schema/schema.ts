@@ -58,6 +58,11 @@ export const memberJoinSchema = z.object({
   candidates: memberSchema,
 });
 
+// Vote schema
+export const voteSchema = z.object({
+  pid: uint256Schema,
+});
+
 // Contract Call schema
 export const contractCallPidSchema = z.object({
   pid: uint256Schema,
@@ -72,6 +77,7 @@ export type initializeSchemaType = z.infer<typeof initializeSchema>;
 export type proposalSchemaType = z.infer<typeof proposalSchema>;
 export type proposalSchemaNoIPFSType = z.infer<typeof proposalSchemaNoIPFS>;
 export type tallySchemaType = z.infer<typeof tallySchema>;
+export type voteSchemaType = z.infer<typeof voteSchema>;
 export type memberJoinSchemaType = z.infer<typeof memberJoinSchema>;
 export type contractCallPidSchemaType = z.infer<typeof contractCallPidSchema>;
 export type contractCallMemberIdSchemaType = z.infer<
