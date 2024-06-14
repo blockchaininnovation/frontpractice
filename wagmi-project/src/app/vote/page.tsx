@@ -4,16 +4,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { useWriteContract, type BaseError } from "wagmi";
-import { type Address } from "viem";
 
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import FormInput from "@/components/form-input";
 
-import { abi } from "@/lib/abi/TextDAOFacade";
 import { voteSchema, type voteSchemaType } from "@/lib/schema/schema";
-import { account } from "@/lib/account";
+
+import { TextDAOFacade } from "@/wagmi";
 
 const DEFAULT_VALUES = {
   pid: 0,
@@ -45,11 +44,9 @@ export default function VotePage() {
 
     writeContract(
       {
-        address: process.env.NEXT_PUBLIC_CONTRACT_ADDR! as Address,
-        abi,
+        ...TextDAOFacade,
         functionName: "voteHeaders",
         args: [args.proposalId, args.headerIds],
-        account,
       },
       {
         onSuccess: (data) => {

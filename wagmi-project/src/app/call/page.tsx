@@ -148,6 +148,8 @@ export default function ContractCallPage() {
               <DisplayResult {...proposalHeaders} />
               <strong>Next Proposal ID</strong>
               <DisplayResult {...nextProposalId} />
+              <strong>Proposal Config</strong>
+              <DisplayResult {...proposalConfig} />
             </div>
           </div>
         </CardFooter>
