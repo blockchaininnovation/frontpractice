@@ -4,19 +4,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { useWriteContract, type BaseError } from "wagmi";
-import { getAddress, type Address } from "viem";
+import { getAddress } from "viem";
 
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import FormInput from "@/components/form-input";
 
-import { abi } from "@/lib/abi/TextDAOFacade";
 import {
   initializeSchema,
   type initializeSchemaType,
 } from "@/lib/schema/schema";
-import { account } from "@/lib/account";
+
+import { TextDAOFacade } from "@/wagmi";
 
 const INPUTS = [
   {
@@ -105,11 +105,9 @@ export default function InitializePage() {
 
     writeContract(
       {
-        address: process.env.NEXT_PUBLIC_CONTRACT_ADDR! as Address,
-        abi,
+        ...TextDAOFacade,
         functionName: "initialize",
         args: [args.initialMembers, args.pConfigSchema],
-        account,
       },
       {
         onSuccess: (data) => {

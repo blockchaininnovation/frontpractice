@@ -18,7 +18,7 @@ const DEFAULT_VALUES = {
   pid: 0,
 };
 
-export default function TallyPage() {
+export default function ForkPage() {
   const { toast } = useToast();
   const { isPending, writeContract } = useWriteContract({
     mutation: {
@@ -44,7 +44,7 @@ export default function TallyPage() {
     writeContract(
       {
         ...TextDAOFacade,
-        functionName: "tally",
+        functionName: "fork",
         args: [args.id],
       },
       {
@@ -55,6 +55,7 @@ export default function TallyPage() {
           });
         },
         onError: (error) => {
+          console.log(error.message);
           toast({
             variant: "destructive",
             title: error.name,
@@ -67,7 +68,7 @@ export default function TallyPage() {
 
   return (
     <div className="px-20 py-5">
-      <h1 className="text-xl font-bold py-10">Tally Page</h1>
+      <h1 className="text-xl font-bold py-10">Fork Page</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
           <FormInput
