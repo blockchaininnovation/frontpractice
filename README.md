@@ -140,7 +140,7 @@
   npm --version
   ```
 
-# このレポジトリについて
+# このレポジトリについて．アプリケーション実行手順など
 
 ## 仕様
 
@@ -161,7 +161,7 @@
 - `shadcn-ui` : 0.8.0
 - `react-hook-form`: ^7.51.5
 
-## 始め方
+## 実行手順
 
 1. レポジトリをクローンする
 
@@ -188,12 +188,19 @@
    ```
 
    ```cmd
-   npm build
+   npm run build
    ```
 
    ```cmd
-   npm start
+   npm run start
    ```
+
+もしくは，run build, run startの代わりに開発モードとして
+
+   ```cmd
+   npm run dev
+   ```
+
 
 3. ブラウザで以下にアクセス
 
