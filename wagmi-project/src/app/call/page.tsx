@@ -49,7 +49,6 @@ export default function ContractCallPage() {
   const {
     refetch: proposalRefetch,
     data: proposalData,
-    error: proposalError,
     isPending: isProposalPending,
   } = useReadContracts({
     contracts: [
@@ -77,7 +76,6 @@ export default function ContractCallPage() {
   const {
     refetch: memberRefetch,
     data: memberData,
-    error: memberError,
     isPending: isMemberPending,
   } = useReadContracts({
     contracts: [

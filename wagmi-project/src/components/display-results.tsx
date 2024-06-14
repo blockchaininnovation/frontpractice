@@ -39,7 +39,7 @@ function RenderObjects(result: { [key: string]: any } | bigint | undefined) {
 export default function DisplayResult(returnData: DisplayResultProps) {
   const { status, result, error } = returnData;
   if (status === "failure") {
-    return <div>{error.toString()}</div>;
+    return <div className="w-[1100px] break-words">{error.toString()}</div>;
   } else if (status === undefined) {
     return null;
   }
