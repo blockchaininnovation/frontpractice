@@ -21,6 +21,20 @@ export const bytes32Schema = z.string().refine(
   })
 );
 
+export const addressSchema = z
+  .string()
+  .min(1, { message: "Address not provided" })
+  .refine(
+    (val) => {
+      return isAddress(val);
+    },
+    (val) => {
+      return {
+        message: `Invalid address: ${val}`,
+      };
+    }
+  );
+
 export const addressArraySchema = z
   .string()
   .min(1, { message: "Address not provided" })

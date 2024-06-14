@@ -1,12 +1,10 @@
 "use client";
 
-import { useState } from "react";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { useWriteContract, type BaseError } from "wagmi";
-import { toHex, type Address } from "viem";
+import { Address, getAddress, toHex } from "viem";
 
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -15,37 +13,46 @@ import FormInput from "@/components/form-input";
 
 import { abi } from "@/lib/abi/TextDAOFacade";
 import {
-  proposalSchemaNoIPFS,
-  type proposalSchemaNoIPFSType,
+  memberJoinSchema,
+  type memberJoinSchemaType,
 } from "@/lib/schema/schema";
 import { account } from "@/lib/account";
 
 const INPUTS = [
   {
-    name: "id",
-    label: "Header ID",
-    placeholder: "1",
+    name: "pid",
+    label: "Proposal ID",
+    placeholder: "0",
     _type: "number",
-    description: "ヘッダーに付与したい ID を入力してください。",
+    description: "投票に参加したい提案のIDを入力してください。",
   },
   {
-    name: "title",
-    label: "Title",
-    placeholder: "Proposal Title",
+    name: "candidates.id",
+    label: "Member ID",
+    placeholder: "123",
+    _type: "number",
+    description: "希望のメンバーIDを入力してください。",
+  },
+  {
+    name: "candidates.addr",
+    label: "Member Address",
+    placeholder: "0xf39F...2266",
     _type: "text",
-    description: "提案のタイトルを入力してください。",
+    description: "投票に使用する自身のウォレットアドレスを入力してください。",
   },
 ];
 
 const DEFAULT_VALUES = {
-  id: 0,
-  title: "",
+  pid: 0,
+  candidates: {
+    id: 0,
+    addr: "",
+  },
 };
 
-export default function ProposePage() {
-  const [isHandling, setIsHandling] = useState(false);
+export default function MemberJoinPage() {
   const { toast } = useToast();
-  const { writeContract, isError } = useWriteContract({
+  const { isPending, writeContract } = useWriteContract({
     mutation: {
       retry: 3,
       onMutate: () =>
@@ -56,33 +63,18 @@ export default function ProposePage() {
     },
   });
 
-  const form = useForm<proposalSchemaNoIPFSType>({
-    resolver: zodResolver(proposalSchemaNoIPFS),
+  const form = useForm<memberJoinSchemaType>({
+    resolver: zodResolver(memberJoinSchema),
     defaultValues: DEFAULT_VALUES,
   });
 
-  function handleSubmit(data: proposalSchemaNoIPFSType) {
+  function handleSubmit(data: memberJoinSchemaType) {
     const args = {
-      header: {
-        id: BigInt(data.id),
-        currentScore: BigInt(0),
-        metadataURI: toHex(data.title, { size: 32 }),
-        tagIds: [],
-      },
-      cmd: {
-        id: BigInt(0),
-        actions: [],
-        currentScore: BigInt(0),
-      },
-      proposalMeta: {
-        currentScore: BigInt(0),
-        headerRank: [],
-        cmdRank: [],
-        nextHeaderTallyFrom: BigInt(0),
-        nextCmdTallyFrom: BigInt(0),
-        reps: [],
-        nextRepId: BigInt(0),
-        createdAt: BigInt(0),
+      id: BigInt(data.pid),
+      _candidates: {
+        id: BigInt(data.candidates.id),
+        addr: getAddress(data.candidates.addr),
+        metadataURI: toHex("0", { size: 32 }),
       },
     };
 
@@ -90,29 +82,22 @@ export default function ProposePage() {
       {
         address: process.env.NEXT_PUBLIC_CONTRACT_ADDR! as Address,
         abi,
-        functionName: "propose",
-        args: [args],
+        functionName: "memberJoin",
+        args: [args.id, [args._candidates]],
         account,
       },
       {
         onSuccess: (data) => {
-          setIsHandling(false);
           toast({
             title: "Transaction confirmed",
             description: `Transaction Hash: ${data}`,
           });
         },
         onError: (error) => {
-          setIsHandling(false);
           toast({
             variant: "destructive",
             title: error.name,
-            description: (
-              <>
-                {(error as BaseError).shortMessage} <br />
-                Please try again.
-              </>
-            ),
+            description: (error as BaseError).shortMessage,
           });
         },
       }
@@ -121,22 +106,22 @@ export default function ProposePage() {
 
   return (
     <div className="px-20 py-5">
-      <h1 className="text-xl font-bold py-10">Propose Page</h1>
+      <h1 className="text-xl font-bold py-10">Member Join Page</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
           {INPUTS.map((input) => (
-            <FormInput<proposalSchemaNoIPFSType>
+            <FormInput<memberJoinSchemaType>
               key={input.name}
               _form={form}
-              name={input.name as keyof proposalSchemaNoIPFSType}
+              name={input.name as keyof memberJoinSchemaType}
               label={input.label}
               placeholder={input.placeholder}
               _type={input._type}
               description={input.description}
             />
           ))}
-          <Button type="submit" disabled={isHandling}>
-            {isHandling ? "Creating..." : "Submit"}
+          <Button type="submit" disabled={isPending}>
+            {isPending ? "Confirming..." : "Submit"}
           </Button>
         </form>
       </Form>

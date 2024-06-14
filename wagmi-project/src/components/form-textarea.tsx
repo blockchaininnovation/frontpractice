@@ -12,25 +12,23 @@ import {
   FormDescription,
   FormMessage,
 } from "./ui/form";
-import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
 
-interface FormInputProps<T extends FieldValues> {
+interface FormTextareaProps<T extends FieldValues> {
   _form: UseFormReturn<T>;
   name: Path<T>;
   label: string;
   placeholder: string;
-  _type: string;
   description: string;
 }
 
-export default function FormInput<T extends FieldValues>({
+export default function FormTextarea<T extends FieldValues>({
   _form,
   name,
   label,
   placeholder,
-  _type,
   description,
-}: FormInputProps<T>) {
+}: FormTextareaProps<T>) {
   return (
     <FormField
       control={_form.control}
@@ -39,10 +37,9 @@ export default function FormInput<T extends FieldValues>({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input
+            <Textarea
               placeholder={placeholder}
               {...field}
-              type={_type}
               onFocus={(e) => e.currentTarget.select()}
             />
           </FormControl>
