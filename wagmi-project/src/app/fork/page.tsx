@@ -13,6 +13,7 @@ import FormInput from "@/components/form-input";
 import { tallySchema, type tallySchemaType } from "@/lib/schema/schema";
 
 import { TextDAOFacade } from "@/wagmi";
+import { toHex } from "viem";
 
 const DEFAULT_VALUES = {
   pid: 0,
@@ -39,13 +40,36 @@ export default function ForkPage() {
   function handleSubmit(data: tallySchemaType) {
     const args = {
       id: BigInt(data.pid),
+      _p: {
+        header: {
+          id: BigInt(0),
+          currentScore: BigInt(0),
+          metadataURI: toHex("ddddd", { size: 32 }),
+          tagIds: [],
+        },
+        cmd: {
+          id: BigInt(0),
+          actions: [],
+          currentScore: BigInt(0),
+        },
+        proposalMeta: {
+          currentScore: BigInt(0),
+          headerRank: [],
+          cmdRank: [],
+          nextHeaderTallyFrom: BigInt(0),
+          nextCmdTallyFrom: BigInt(0),
+          reps: [],
+          nextRepId: BigInt(0),
+          createdAt: BigInt(0),
+        },
+      },
     };
 
     writeContract(
       {
         ...TextDAOFacade,
         functionName: "fork",
-        args: [args.id],
+        args: [args.id, args._p],
       },
       {
         onSuccess: (data) => {
