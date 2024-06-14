@@ -7,12 +7,21 @@ import { abi } from "@/lib/abi/TextDAOFacade";
 import { account } from "@/lib/account";
 // import { injected } from "wagmi/connectors";
 
+// export const config = createConfig({
+//   chains: [sepolia],
+//   connectors: [],
+//   ssr: true,
+//   transports: {
+//     [sepolia.id]: http(),
+//   },
+// });
+
 export const config = createConfig({
   chains: [sepolia],
   connectors: [],
   ssr: true,
   transports: {
-    [sepolia.id]: http(),
+    [sepolia.id]: http("http://localhost:8545"),
   },
 });
 

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { useReadContract, useReadContracts, type BaseError } from "wagmi";
+import { useReadContracts, type BaseError } from "wagmi";
 
 import {
   Card,
@@ -19,6 +19,7 @@ import { Form } from "@/components/ui/form";
 import FormInput from "@/components/form-input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import DisplayResult from "@/components/display-results";
 
 import {
   contractCallPidSchema,
@@ -73,7 +74,12 @@ export default function ContractCallPage() {
     ],
   });
 
-  const memberRes = useReadContracts({
+  const {
+    refetch: memberRefetch,
+    data: memberData,
+    error: memberError,
+    isPending: isMemberPending,
+  } = useReadContracts({
     contracts: [
       {
         ...TextDAOFacade,
@@ -87,18 +93,25 @@ export default function ContractCallPage() {
     ],
   });
 
-  const [headersLength, proposalMeta] = proposalData || [];
+  const [proposalInfo, proposalHeaders, nextProposalId, proposalConfig] =
+    proposalData || [];
+
+  const [memberInfo, nextMemberId] = memberData || [];
 
   function getProposalData(data: contractCallPidSchemaType) {
     setPid(data.pid);
     proposalRefetch();
-    console.log(proposalData);
+    console.log(proposalInfo);
+    console.log(proposalHeaders);
+    console.log(nextProposalId);
+    console.log(proposalConfig);
   }
 
   function getMemberData(data: contractCallMemberIdSchemaType) {
     setMemberID(data.memberID);
-    memberRes.refetch();
-    console.log(memberRes.data);
+    memberRefetch();
+    console.log(memberInfo);
+    console.log(nextMemberId);
   }
 
   return (
@@ -126,19 +139,61 @@ export default function ContractCallPage() {
                 description="データを取得したいProposalのIDを入力してください。"
               />
               <Button type="submit" disabled={isProposalPending}>
-                {isProposalPending ? "Confirming..." : "Submit"}
+                {isProposalPending ? "Fetching..." : "Call"}
               </Button>
             </form>
           </Form>
         </CardContent>
         <CardFooter>
           <div className="mt-5">
-            <Label className="font-semibold">Results</Label>
-            <div className="grid grid-cols-2 gap-3">
-              <div>Headers Length</div>
-              <div>{headersLength?.toString()}</div>
-              <div>Created At</div>
-              <div>{proposalMeta?.toString()}</div>
+            <Label className="font-semibold text-lg">Results</Label>
+            <div className="mt-3">
+              <strong>Proposal Information</strong>
+              <DisplayResult {...proposalInfo} />
+              <strong>Headers</strong>
+              <DisplayResult {...proposalHeaders} />
+              <strong>Next Proposal ID</strong>
+              <DisplayResult {...nextProposalId} />
+            </div>
+          </div>
+        </CardFooter>
+      </Card>
+
+      <Card className="mt-8">
+        <CardHeader>
+          <CardTitle className="text-lg">Get Member Data</CardTitle>
+          <CardDescription>
+            指定されたIDのMemberデータをコントラクトから読み取ります。
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...memberIdForm}>
+            <form
+              onSubmit={memberIdForm.handleSubmit(getMemberData)}
+              className="space-y-8"
+            >
+              <FormInput<contractCallMemberIdSchemaType>
+                _form={memberIdForm}
+                name="memberID"
+                label="Member ID"
+                placeholder="0"
+                _type="number"
+                description="データを取得したいMemberのIDを入力してください。"
+              />
+              <Button type="submit" disabled={isMemberPending}>
+                {isMemberPending ? "Fetching..." : "Call"}
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+        <CardFooter>
+          <div className="mt-5">
+            <Label className="font-semibold text-lg">Results</Label>
+            <div className="mt-3">
+              <strong>Member Information</strong>
+              <DisplayResult {...memberInfo} />
+              <strong>Next Member ID</strong>
+              <DisplayResult {...nextMemberId} />
             </div>
           </div>
         </CardFooter>
