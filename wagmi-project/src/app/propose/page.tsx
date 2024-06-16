@@ -21,13 +21,13 @@ import {
 import { TextDAOFacade } from "@/wagmi";
 
 const INPUTS = [
-  {
-    name: "id",
-    label: "Header ID",
-    placeholder: "1",
-    _type: "number",
-    description: "ヘッダーに付与したい ID を入力してください。",
-  },
+  // {
+  //   name: "id",
+  //   label: "Header ID",
+  //   placeholder: "1",
+  //   _type: "number",
+  //   description: "ヘッダーに付与したい ID を入力してください。",
+  // },
   {
     name: "title",
     label: "Title",
@@ -64,7 +64,8 @@ export default function ProposePage() {
   function handleSubmit(data: proposalSchemaNoIPFSType) {
     const args = {
       header: {
-        id: BigInt(data.id),
+        // id: BigInt(data.id),
+        id: BigInt(0),
         currentScore: BigInt(0),
         metadataURI: toHex(data.title, { size: 32 }),
         tagIds: [],
