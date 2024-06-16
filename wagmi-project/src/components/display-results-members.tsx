@@ -1,4 +1,4 @@
-interface DisplayResultProps {
+interface DisplayResultMembersProps {
   status?: "success" | "failure" | undefined;
   result?: { [key: string]: any } | bigint | undefined;
   error?: any;
@@ -36,13 +36,32 @@ function RenderObjects(result: { [key: string]: any } | bigint | undefined) {
   });
 }
 
-export default function DisplayResult(returnData: DisplayResultProps) {
+export default function DisplayResultMembers(returnData: DisplayResultMembersProps) {
   const { status, result, error } = returnData;
   if (status === "failure") {
     return <div className="w-[1100px] break-words">{error.toString()}</div>;
   } else if (status === undefined) {
     return null;
   }
+
+  if (result !== undefined) {
+    console.log("result: %o", result);
+
+    if (result.hasOwnProperty('addr')) {
+      console.log("result.id: %o", result.id);
+      console.log("result.addr: %o", result.addr);
+
+      if (result.id >= Number.MAX_SAFE_INTEGER) {
+        return <div><span style={{ color: 'red' }}>No data found</span></div>;
+      }
+      return <div>ID: {result.id + ""}<br />address: {result.addr}</div>;
+    }
+  } else {
+    return <div><span style={{ color: 'red' }}>No data found</span></div>;
+  }
+
+
+  // return <div>{RenderObjects(result)}</div>;
 
   return <div>{RenderObjects(result)}</div>;
 }

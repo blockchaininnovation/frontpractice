@@ -20,6 +20,12 @@ const paths = {
   call() {
     return "/call";
   },
+  proposals() {
+    return "/proposals";
+  },
+  members() {
+    return "/members";
+  },
 };
 
 export default paths;

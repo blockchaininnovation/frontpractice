@@ -19,7 +19,84 @@ export const abi = [
   },
   {
     type: "function",
-    inputs: [{ name: "_proposalId", internalType: "uint256", type: "uint256" }],
+    inputs: [
+      { name: "_proposalId", internalType: "uint256", type: "uint256" },
+      {
+        name: "_p",
+        internalType: "struct Types.ProposalArg",
+        type: "tuple",
+        components: [
+          {
+            name: "header",
+            internalType: "struct Schema.Header",
+            type: "tuple",
+            components: [
+              { name: "id", internalType: "uint256", type: "uint256" },
+              {
+                name: "currentScore",
+                internalType: "uint256",
+                type: "uint256",
+              },
+              { name: "metadataURI", internalType: "bytes32", type: "bytes32" },
+              { name: "tagIds", internalType: "uint256[]", type: "uint256[]" },
+            ],
+          },
+          {
+            name: "cmd",
+            internalType: "struct Schema.Command",
+            type: "tuple",
+            components: [
+              { name: "id", internalType: "uint256", type: "uint256" },
+              {
+                name: "actions",
+                internalType: "struct Schema.Action[]",
+                type: "tuple[]",
+                components: [
+                  { name: "func", internalType: "string", type: "string" },
+                  { name: "abiParams", internalType: "bytes", type: "bytes" },
+                ],
+              },
+              {
+                name: "currentScore",
+                internalType: "uint256",
+                type: "uint256",
+              },
+            ],
+          },
+          {
+            name: "proposalMeta",
+            internalType: "struct Schema.ProposalMeta",
+            type: "tuple",
+            components: [
+              {
+                name: "currentScore",
+                internalType: "uint256",
+                type: "uint256",
+              },
+              {
+                name: "headerRank",
+                internalType: "uint256[]",
+                type: "uint256[]",
+              },
+              { name: "cmdRank", internalType: "uint256[]", type: "uint256[]" },
+              {
+                name: "nextHeaderTallyFrom",
+                internalType: "uint256",
+                type: "uint256",
+              },
+              {
+                name: "nextCmdTallyFrom",
+                internalType: "uint256",
+                type: "uint256",
+              },
+              { name: "reps", internalType: "address[]", type: "address[]" },
+              { name: "nextRepId", internalType: "uint256", type: "uint256" },
+              { name: "createdAt", internalType: "uint256", type: "uint256" },
+            ],
+          },
+        ],
+      },
+    ],
     name: "fork",
     outputs: [],
     stateMutability: "nonpayable",
@@ -294,7 +371,6 @@ export const abi = [
   {
     type: "function",
     inputs: [
-      { name: "_proposalId", internalType: "uint256", type: "uint256" },
       {
         name: "_candidates",
         internalType: "struct Schema.Member[]",

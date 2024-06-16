@@ -15,6 +15,9 @@
 
 - [このレポジトリについて](#このレポジトリについて)
   - [仕様](#仕様)
+  - [使用パッケージ](#使用パッケージ)
+  - [実行手順](#実行手順)
+  - [ローカルの TextDAO を使用する場合](#ローカルの-textdao-を使用する場合)
 
 ---
 
@@ -147,11 +150,12 @@
 - 対応ブラウザ： Chrome ( JavaScript を許可してください )
 - 対応デバイス： PC
 - 対応ウォレット： MetaMask ( Chrome 拡張機能 )
-- local Storage を使用
 
 - Indexer 無し
 - DB 無し
 - Backend ( Server, Server Action ) 無し
+
+- 仕様変更で使わなくなったパッケージ、ファイルも一部残っています
 
 ## 使用パッケージ
 
@@ -188,6 +192,12 @@
    ```
 
    ```cmd
+   cp .env.example .env.local
+   ```
+
+   各自 ↑ で作成した `.env.local` に TextDAO のアドレスを記載してください
+
+   ```cmd
    npm run build
    ```
 
@@ -195,13 +205,52 @@
    npm run start
    ```
 
-もしくは，run build, run startの代わりに開発モードとして
+   もしくは，run build, run start の代わりに開発モードとして
 
    ```cmd
    npm run dev
    ```
 
-
 3. ブラウザで以下にアクセス
 
    http://localhost:3000 または http://127.0.0.1:3000
+
+## ローカルの TextDAO を使用する場合
+
+1.  [Alchemy](https://www.alchemy.com/)（または他のノードサービス）から API キーを取得する
+2.  TextDAO のディレクトリで以下のコマンドを実行
+
+    `anvil --fork-url https://eth-sepolia.g.alchemy.com/v2/<api_key>`
+
+3.  コンソールに出力された PrivateKey のどれか一つを `.env` ファイルに記載
+
+    ex: ) `DEPLOYER_PRIV_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`
+
+4.  TextDAO のディレクトリで以下のコマンドを実行
+
+    `forge script script/Deployment.s.sol --rpc-url http://127.0.0.1:8545 --broadcast --legacy`
+
+5.  `wagmi-project` の `src/wagmi.ts` の `config` を以下のように変更
+
+    ```typescript
+    export const config = createConfig({
+      chains: [sepolia],
+      connectors: [],
+      ssr: true,
+      transports: {
+        [sepolia.id]: http("http://localhost:8545"),
+      },
+    });
+    ```
+
+6.  `wagmi-project` の `src/wagmi.ts` の `textDAOFacade` を以下のように変更
+
+    ```typescript
+    export const TextDAOFacade = {
+      address: process.env.NEXT_PUBLIC_CONTRACT_ADDR! as Address,
+      abi,
+      account,
+    } as const;
+    ```
+
+    ↑ `account` は `src/lib/account.ts` からインポートしてください

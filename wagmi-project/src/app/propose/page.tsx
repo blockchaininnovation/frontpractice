@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { useWriteContract, type BaseError } from "wagmi";
-import { toHex } from "viem";
+import { toHex, getAddress } from "viem";
 
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -21,13 +21,6 @@ import {
 import { TextDAOFacade } from "@/wagmi";
 
 const INPUTS = [
-  {
-    name: "id",
-    label: "Header ID",
-    placeholder: "1",
-    _type: "number",
-    description: "ヘッダーに付与したい ID を入力してください。",
-  },
   {
     name: "title",
     label: "Title",
@@ -64,7 +57,7 @@ export default function ProposePage() {
   function handleSubmit(data: proposalSchemaNoIPFSType) {
     const args = {
       header: {
-        id: BigInt(data.id),
+        id: BigInt(0),
         currentScore: BigInt(0),
         metadataURI: toHex(data.title, { size: 32 }),
         tagIds: [],
@@ -80,7 +73,7 @@ export default function ProposePage() {
         cmdRank: [],
         nextHeaderTallyFrom: BigInt(0),
         nextCmdTallyFrom: BigInt(0),
-        reps: [],
+        reps: [getAddress("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266")],
         nextRepId: BigInt(0),
         createdAt: BigInt(0),
       },
