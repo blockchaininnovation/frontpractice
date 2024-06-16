@@ -216,25 +216,27 @@
    http://localhost:3000 または http://127.0.0.1:3000
 
 ## ローカルの TextDAO を使用する場合
+1. ブロックチェーン起動
+    1.  localで開発用のブロックチェーンを起動
+        1.  TextDAO のディレクトリで以下のコマンドを実行
+        ```
+        anvil
+        ```
 
-1.1.  localで開発用のブロックチェーンを起動
-    1.1.  TextDAO のディレクトリで以下のコマンドを実行
-
-    `anvil`
-
-1.2. もしくは，sepoliaをコピーしてローカルで起動したい場合は [Alchemy](https://www.alchemy.com/)（または他のノードサービス）から API キーを取得する
-    1.1.  TextDAO のディレクトリで以下のコマンドを実行
-
-    `anvil --fork-url https://eth-sepolia.g.alchemy.com/v2/<api_key>`
+        2. もしくは，sepoliaをコピーしてローカルで起動したい場合は [Alchemy](https://www.alchemy.com/)（または他のノードサービス）から API キーを取得する
+        3.  TextDAO のディレクトリで以下のコマンドを実行
+        ```
+        anvil --fork-url https://eth-sepolia.g.alchemy.com/v2/<api_key>
+        ```
 
 
 2.  コンソールに出力された PrivateKey のどれか一つを TextDAOの`.env` ファイルに記載．
-    2.1 .envファイルがない場合は以下：
+    1. .envファイルがない場合は以下：
       .env.sampleを.envにコピー
       ```
       cp .env.sample .env
       ```
-    2.1 コピー
+    2. コピー
       ```
       DEPLOYER_PRIV_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`
       ```
@@ -244,29 +246,29 @@
     forge script script/Deployment.s.sol --rpc-url http://127.0.0.1:8545 --broadcast
     ```
 
-4.  `wagmi-project` の `src/wagmi.ts` の `config` を以下のように変更
-  4.1 localでそのままanvilで起動した場合：
-    ```typescript
-    export const config = createConfig({
-      chains: [sepolia],
-      connectors: [],
-      ssr: true,
-      transports: {
-        [sepolia.id]: http("http://localhost:8545"),
-      },
-    });
-    ```
-  4.2 localにsepoliaをコピーした場合：
-    ```typescript
-    export const config = createConfig({
-      chains: [anvil],
-      connectors: [],
-      ssr: true,
-      transports: {
-        [anvil.id]: http("http://localhost:8545"),
-      },
-    });
-    ```
+4.  `wagmi-project` の `src/wagmi.ts` の `config` を以下のように変更:
+    1. localでそのままanvilで起動した場合：
+      ```typescript
+      export const config = createConfig({
+        chains: [sepolia],
+        connectors: [],
+        ssr: true,
+        transports: {
+          [sepolia.id]: http("http://localhost:8545"),
+        },
+      });
+      ```
+    2. localにsepoliaをコピーした場合：
+      ```typescript
+      export const config = createConfig({
+        chains: [anvil],
+        connectors: [],
+        ssr: true,
+        transports: {
+          [anvil.id]: http("http://localhost:8545"),
+        },
+      });
+      ```
 
 5.  `wagmi-project` の `src/wagmi.ts` の `textDAOFacade` を以下のように変更
 
