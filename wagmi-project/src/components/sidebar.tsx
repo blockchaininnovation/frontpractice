@@ -8,7 +8,8 @@ export default function Sidebar() {
       <div className="w-36">
         <h1 className="text-xl font-semibold">Participants</h1>
         <nav className="grid gap-4 text-sm text-muted-foreground mt-6">
-          <Link href={paths.memberJoin()}>Member Join</Link>
+        <Link href={paths.proposalList()}>Proposal List</Link>
+        <Link href={paths.memberJoin()}>Member Join</Link>
           <Link href={paths.vote()}>Vote</Link>
           <Link href={paths.call()}>Contract Call</Link>
         </nav>

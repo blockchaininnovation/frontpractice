@@ -20,6 +20,9 @@ const paths = {
   call() {
     return "/call";
   },
+  proposalList() {
+    return "/proposalList";
+  },
 };
 
 export default paths;
