@@ -236,9 +236,9 @@
       ```
       cp .env.sample .env
       ```
-    2. コピー
+    2. コピー(一例)
       ```
-      DEPLOYER_PRIV_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`
+      DEPLOYER_PRIV_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
       ```
 3.  TextDAO のディレクトリで以下のコマンドを実行
 
