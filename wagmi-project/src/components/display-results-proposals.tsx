@@ -45,6 +45,7 @@ function hexToAscii(hex: string): string {
   }
   return str;
 }
+
 export default function DisplayResultProposals(returnData: DisplayResultProposalsProps) {
   const { status, result, error } = returnData;
   if (status === "failure") {

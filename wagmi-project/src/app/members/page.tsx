@@ -19,7 +19,7 @@ import { Form } from "@/components/ui/form";
 import FormInput from "@/components/form-input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import DisplayResult from "@/components/display-results";
+import DisplayResultMembers from "@/components/display-results-members";
 
 import {
   contractCallPidSchema,
@@ -56,16 +56,12 @@ export default function ContractCallPage() {
         ...TextDAOFacade,
         functionName: "getMember",
         args: [BigInt(memberID)],
-      },
-      {
-        ...TextDAOFacade,
-        functionName: "getNextMemberId",
-      },
+      }
     ],
   });
 
 
-  const [memberInfo, nextMemberId] = memberData || [];
+  const [memberInfo] = memberData || [];
 
 
   function getMemberData(data: contractCallMemberIdSchemaType) {
@@ -106,12 +102,9 @@ export default function ContractCallPage() {
         </CardContent>
         <CardFooter>
           <div className="mt-5">
-            <Label className="font-semibold text-lg">Results</Label>
             <div className="mt-3">
               <strong>Member Information</strong>
-              <DisplayResult {...memberInfo} />
-              <strong>Next Member ID</strong>
-              <DisplayResult {...nextMemberId} />
+              <DisplayResultMembers {...memberInfo} />
             </div>
           </div>
         </CardFooter>
