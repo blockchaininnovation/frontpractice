@@ -31,17 +31,11 @@ import {
 import { TextDAOFacade } from "@/wagmi";
 
 export default function ContractCallPage() {
-  const [pid, setPid] = useState<number>(0);
   const [memberID, setMemberID] = useState<number>(0);
-
-  const pidForm = useForm<contractCallPidSchemaType>({
-    resolver: zodResolver(contractCallPidSchema),
-    defaultValues: { pid },
-  });
 
   const memberIdForm = useForm<contractCallMemberIdSchemaType>({
     resolver: zodResolver(contractCallMemberIdSchema),
-    defaultValues: { memberID: 0 },
+    defaultValues: { memberID },
   });
 
   // Note: Only works with MultiCall contract (aggregator3)

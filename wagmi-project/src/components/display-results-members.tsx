@@ -50,6 +50,10 @@ export default function DisplayResultMembers(returnData: DisplayResultMembersPro
     if (result.hasOwnProperty('addr')) {
       console.log("result.id: %o", result.id);
       console.log("result.addr: %o", result.addr);
+
+      if (result.id >= Number.MAX_SAFE_INTEGER) {
+        return <div><span style={{ color: 'red' }}>No data found</span></div>;
+      }
       return <div>ID: {result.id + ""}<br />address: {result.addr}</div>;
     }
   } else {
