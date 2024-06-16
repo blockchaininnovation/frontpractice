@@ -95,7 +95,7 @@ export default function Navbar() {
           )}
         </div>
       </header>
-      {account.status === "connected" && account.chainId !== 11155111 && (
+      {/* {account.status === "connected" && account.chainId !== 11155111 && (
         <Alert variant="destructive" className="w-80 right-0 mt-10 absolute">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Chain Not Supported</AlertTitle>
@@ -104,7 +104,7 @@ export default function Navbar() {
             Make sure to use Sepolia.
           </AlertDescription>
         </Alert>
-      )}
+      )} */}
     </div>
   );
 }
