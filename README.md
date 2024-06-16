@@ -247,7 +247,7 @@
     ```
 
 4.  `wagmi-project` の `src/wagmi.ts` の `config` を以下のように変更:
-    1. localでそのままanvilで起動した場合：
+    1. localでそのままanvilで起動したチェーンに接続する場合：
       ```typescript
       export const config = createConfig({
         chains: [sepolia],
@@ -258,7 +258,7 @@
         },
       });
       ```
-    2. localにsepoliaをコピーした場合：
+    2. localにsepoliaをコピーしたチェーンに接続する場合：
       ```typescript
       export const config = createConfig({
         chains: [anvil],
@@ -267,6 +267,18 @@
         transports: {
           [anvil.id]: http("http://localhost:8545"),
         },
+      });
+      ```
+
+    3. sepoliaに接続する場合：
+      ```typescript
+      export const config = createConfig({
+        chains: [sepolia],
+        connectors: [],
+        ssr: true,
+        transports: {
+          [sepolia.id]: http("https://sepolia.infura.io/v3/"),
+         ,
       });
       ```
 
