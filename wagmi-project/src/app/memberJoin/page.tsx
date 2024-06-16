@@ -19,13 +19,13 @@ import {
 import { TextDAOFacade } from "@/wagmi";
 
 const INPUTS = [
-  {
-    name: "pid",
-    label: "Proposal ID",
-    placeholder: "0",
-    _type: "number",
-    description: "投票に参加したい提案のIDを入力してください。",
-  },
+  // {
+  //   name: "pid",
+  //   label: "Proposal ID",
+  //   placeholder: "0",
+  //   _type: "number",
+  //   description: "投票に参加したい提案のIDを入力してください。",
+  // },
   {
     name: "candidates.id",
     label: "Member ID",
@@ -70,7 +70,7 @@ export default function MemberJoinPage() {
 
   function handleSubmit(data: memberJoinSchemaType) {
     const args = {
-      id: BigInt(data.pid),
+      id: BigInt(0),
       _candidates: {
         id: BigInt(data.candidates.id),
         addr: getAddress(data.candidates.addr),
