@@ -19,6 +19,8 @@ import { Form } from "@/components/ui/form";
 import FormInput from "@/components/form-input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+
+import DisplayResult from "@/components/display-results";
 import DisplayResultProposals from "@/components/display-results-proposals";
 
 import {
@@ -32,16 +34,10 @@ import { TextDAOFacade } from "@/wagmi";
 
 export default function ContractCallPage() {
   const [pid, setPid] = useState<number>(0);
-  const [memberID, setMemberID] = useState<number>(0);
 
   const pidForm = useForm<contractCallPidSchemaType>({
     resolver: zodResolver(contractCallPidSchema),
     defaultValues: { pid },
-  });
-
-  const memberIdForm = useForm<contractCallMemberIdSchemaType>({
-    resolver: zodResolver(contractCallMemberIdSchema),
-    defaultValues: { memberID: 0 },
   });
 
   // Note: Only works with MultiCall contract (aggregator3)
@@ -52,31 +48,20 @@ export default function ContractCallPage() {
     isPending: isProposalPending,
   } = useReadContracts({
     contracts: [
-      // {
-      //   ...TextDAOFacade,
-      //   functionName: "getProposal",
-      //   args: [BigInt(pid)],
-      // },
       {
         ...TextDAOFacade,
         functionName: "getProposalHeaders",
         args: [BigInt(pid)],
       },
-      // {
-      //   ...TextDAOFacade,
-      //   functionName: "getNextProposalId",
-      // },
-      // {
-      //   ...TextDAOFacade,
-      //   functionName: "getProposalsConfig",
-      // },
+      {
+        ...TextDAOFacade,
+        functionName: "getNextProposalId",
+      },
     ],
   });
 
 
-  const [proposalHeaders] =
-    proposalData || [];
-
+  const [proposalHeaders, nextProposalId] = proposalData || [];
 
   function getProposalData(data: contractCallPidSchemaType) {
     setPid(data.pid);
@@ -116,9 +101,11 @@ export default function ContractCallPage() {
         </CardContent>
         <CardFooter>
           <div className="mt-5">
-            <Label className="font-semibold text-lg">Results</Label>
+            登録済みのIDは0から
+            <DisplayResultProposals {...nextProposalId} />
+            です．
             <div className="mt-3">
-              <strong>Proposal name</strong>
+              <strong>Proposal detail:</strong>
               <DisplayResultProposals {...proposalHeaders} />
             </div>
           </div>

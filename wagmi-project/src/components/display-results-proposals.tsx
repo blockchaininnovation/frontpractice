@@ -53,12 +53,27 @@ export default function DisplayResultProposals(returnData: DisplayResultProposal
   } else if (status === undefined) {
     return null;
   }
+
+  console.log("result: %o", result);
   if (Array.isArray(result) && result.length > 0 && result[0].hasOwnProperty('metadataURI')) {
     console.log("result[0].metadataURI: %o", hexToAscii(result[0].metadataURI));
-    return <div>{hexToAscii(result[0].metadataURI)}</div>;
+    const metadataURI = hexToAscii(result[0].metadataURI);
+    const id = result[0].id + "";
+    const currentScore = result[0].currentScore + "";
+    return <div>ID: {id}<br /> title: {metadataURI}<br />score: {currentScore} </div>;
   } else {
-    return <div><span style={{ color: 'red' }}>No data found</span></div>;
+    const strInput = result + "";
+    var num = parseInt(strInput);
+    console.log("num: %o", num);
+
+    if (!isNaN(num) && isFinite(num)) {
+      num = num - 1;
+      return <div>{num.toString()}</div>;
+    } else {
+      return <div><span style={{ color: 'red' }}>No data found</span></div>;
+    }
   }
   // return <div>{RenderObjects(result)}</div>;
 }
+
 
