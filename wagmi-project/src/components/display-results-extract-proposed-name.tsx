@@ -40,8 +40,8 @@ function hexToAscii(hex: string): string {
   // 2文字ずつに分割してASCIIコードに変換
   let str = '';
   for (let i = 0; i < hex.length; i += 2) {
-      // 2文字の16進数を10進数に変換し、対応するASCII文字に変換
-      str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    // 2文字の16進数を10進数に変換し、対応するASCII文字に変換
+    str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
   }
   return str;
 }
@@ -52,8 +52,12 @@ export default function DisplayResultExtractProposedName(returnData: DisplayResu
   } else if (status === undefined) {
     return null;
   }
-  console.log("result: %o", hexToAscii(result[0].metadataURI));
-  return <div>{hexToAscii(result[0].metadataURI)}</div>;
+  if (Array.isArray(result) && result.length > 0 && result[0].hasOwnProperty('metadataURI')) {
+    console.log("result[0].metadataURI: %o", hexToAscii(result[0].metadataURI));
+    return <div>{hexToAscii(result[0].metadataURI)}</div>;
+  } else {
+    return <div><span style={{ color: 'red' }}>No data found</span></div>;
+  }
   // return <div>{RenderObjects(result)}</div>;
 }
 

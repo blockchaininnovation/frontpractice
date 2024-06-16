@@ -20,8 +20,11 @@ const paths = {
   call() {
     return "/call";
   },
-  proposalList() {
-    return "/proposalList";
+  proposals() {
+    return "/proposals";
+  },
+  members() {
+    return "/members";
   },
 };
 
