@@ -12,7 +12,6 @@ export default function Sidebar() {
         <Link href={paths.memberJoin()}>Member Join</Link>
         <Link href={paths.members()}>Members</Link>
           <Link href={paths.vote()}>Vote</Link>
-          <Link href={paths.call()}>Contract Call</Link>
         </nav>
       </div>
       <div className="w-36">
@@ -24,6 +23,7 @@ export default function Sidebar() {
           <Link href={paths.initialize()}>Initialize</Link>
           <Link href={paths.propose()}>Propose</Link>
           <Link href={paths.tally()}>Tally</Link>
+          <Link href={paths.call()}>Contract Call</Link>
         </nav>
       </div>
     </div>

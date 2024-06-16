@@ -19,8 +19,7 @@ import { Form } from "@/components/ui/form";
 import FormInput from "@/components/form-input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import DisplayResult from "@/components/display-results";
-import DisplayResultExtractProposedName from "@/components/display-results-extract-proposed-name";
+import DisplayResultProposals from "@/components/display-results-proposals";
 
 import {
   contractCallPidSchema,
@@ -120,7 +119,7 @@ export default function ContractCallPage() {
             <Label className="font-semibold text-lg">Results</Label>
             <div className="mt-3">
               <strong>Proposal name</strong>
-              <DisplayResultExtractProposedName {...proposalHeaders} />
+              <DisplayResultProposals {...proposalHeaders} />
             </div>
           </div>
         </CardFooter>

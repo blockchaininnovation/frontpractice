@@ -20,7 +20,6 @@ import FormInput from "@/components/form-input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import DisplayResult from "@/components/display-results";
-import DisplayResultExtractProposedName from "@/components/display-results-extract-proposed-name";
 
 import {
   contractCallPidSchema,
@@ -48,69 +47,59 @@ export default function ContractCallPage() {
   // Note: Only works with MultiCall contract (aggregator3)
 
   const {
-    refetch: proposalRefetch,
-    data: proposalData,
-    isPending: isProposalPending,
+    refetch: memberRefetch,
+    data: memberData,
+    isPending: isMemberPending,
   } = useReadContracts({
     contracts: [
-      // {
-      //   ...TextDAOFacade,
-      //   functionName: "getProposal",
-      //   args: [BigInt(pid)],
-      // },
       {
         ...TextDAOFacade,
-        functionName: "getProposalHeaders",
-        args: [BigInt(pid)],
+        functionName: "getMember",
+        args: [BigInt(memberID)],
       },
-      // {
-      //   ...TextDAOFacade,
-      //   functionName: "getNextProposalId",
-      // },
-      // {
-      //   ...TextDAOFacade,
-      //   functionName: "getProposalsConfig",
-      // },
+      {
+        ...TextDAOFacade,
+        functionName: "getNextMemberId",
+      },
     ],
   });
 
 
-  const [proposalHeaders] =
-    proposalData || [];
+  const [memberInfo, nextMemberId] = memberData || [];
 
 
-  function getProposalData(data: contractCallPidSchemaType) {
-    setPid(data.pid);
-    proposalRefetch();
+  function getMemberData(data: contractCallMemberIdSchemaType) {
+    setMemberID(data.memberID);
+    memberRefetch();
   }
-
 
   return (
     <div className="px-20 py-5">
       <h1 className="text-xl font-bold py-10">Contract Call Page</h1>
-      <Card>
+
+      <Card className="mt-8">
         <CardHeader>
-          <CardTitle className="text-lg">Get Proposal Data</CardTitle>
+          <CardTitle className="text-lg">Get Member Data</CardTitle>
           <CardDescription>
-            指定されたIDのProposalデータをコントラクトから読み取ります。
+            指定されたIDのMemberデータをコントラクトから読み取ります。
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Form {...pidForm}>
+          <Form {...memberIdForm}>
             <form
-              onSubmit={pidForm.handleSubmit(getProposalData)}
+              onSubmit={memberIdForm.handleSubmit(getMemberData)}
               className="space-y-8"
             >
-              <FormInput<contractCallPidSchemaType>
-                _form={pidForm}
-                name="pid"
-                label="Proposal ID"
+              <FormInput<contractCallMemberIdSchemaType>
+                _form={memberIdForm}
+                name="memberID"
+                label="Member ID"
                 placeholder="0"
                 _type="number"
-                description="データを取得したいProposalのIDを入力してください。"
+                description="データを取得したいMemberのIDを入力してください。"
               />
-              <Button type="submit" disabled={isProposalPending}>
-                {isProposalPending ? "Fetching..." : "Call"}
+              <Button type="submit" disabled={isMemberPending}>
+                {isMemberPending ? "Fetching..." : "Call"}
               </Button>
             </form>
           </Form>
@@ -119,13 +108,14 @@ export default function ContractCallPage() {
           <div className="mt-5">
             <Label className="font-semibold text-lg">Results</Label>
             <div className="mt-3">
-              <strong>Proposal name</strong>
-              <DisplayResultExtractProposedName {...proposalHeaders} />
+              <strong>Member Information</strong>
+              <DisplayResult {...memberInfo} />
+              <strong>Next Member ID</strong>
+              <DisplayResult {...nextMemberId} />
             </div>
           </div>
         </CardFooter>
       </Card>
-
     </div>
   );
 }

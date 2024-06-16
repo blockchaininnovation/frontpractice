@@ -1,4 +1,4 @@
-interface DisplayResultExtractProposedNameProps {
+interface DisplayResultProposalsProps {
   status?: "success" | "failure" | undefined;
   result?: { [key: string]: any } | bigint | undefined;
   error?: any;
@@ -45,7 +45,7 @@ function hexToAscii(hex: string): string {
   }
   return str;
 }
-export default function DisplayResultExtractProposedName(returnData: DisplayResultExtractProposedNameProps) {
+export default function DisplayResultProposals(returnData: DisplayResultProposalsProps) {
   const { status, result, error } = returnData;
   if (status === "failure") {
     return <div className="w-[1100px] break-words">{error.toString()}</div>;
