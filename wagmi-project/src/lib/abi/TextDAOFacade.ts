@@ -371,7 +371,6 @@ export const abi = [
   {
     type: "function",
     inputs: [
-      { name: "_proposalId", internalType: "uint256", type: "uint256" },
       {
         name: "_candidates",
         internalType: "struct Schema.Member[]",
