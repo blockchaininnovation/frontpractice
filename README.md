@@ -217,21 +217,35 @@
 
 ## ローカルの TextDAO を使用する場合
 
-1.  [Alchemy](https://www.alchemy.com/)（または他のノードサービス）から API キーを取得する
-2.  TextDAO のディレクトリで以下のコマンドを実行
+1.1.  localで開発用のブロックチェーンを起動
+    1.1.  TextDAO のディレクトリで以下のコマンドを実行
+
+    `anvil`
+
+1.2. もしくは，sepoliaをコピーしてローカルで起動したい場合は [Alchemy](https://www.alchemy.com/)（または他のノードサービス）から API キーを取得する
+    1.1.  TextDAO のディレクトリで以下のコマンドを実行
 
     `anvil --fork-url https://eth-sepolia.g.alchemy.com/v2/<api_key>`
 
-3.  コンソールに出力された PrivateKey のどれか一つを `.env` ファイルに記載
 
-    ex: ) `DEPLOYER_PRIV_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`
+2.  コンソールに出力された PrivateKey のどれか一つを TextDAOの`.env` ファイルに記載．
+    2.1 .envファイルがない場合は以下：
+      .env.sampleを.envにコピー
+      ```
+      cp .env.sample .env
+      ```
+    2.1 コピー
+      ```
+      DEPLOYER_PRIV_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`
+      ```
+3.  TextDAO のディレクトリで以下のコマンドを実行
 
-4.  TextDAO のディレクトリで以下のコマンドを実行
+    ```
+    forge script script/Deployment.s.sol --rpc-url http://127.0.0.1:8545 --broadcast
+    ```
 
-    `forge script script/Deployment.s.sol --rpc-url http://127.0.0.1:8545 --broadcast --legacy`
-
-5.  `wagmi-project` の `src/wagmi.ts` の `config` を以下のように変更
-
+4.  `wagmi-project` の `src/wagmi.ts` の `config` を以下のように変更
+  4.1 localでそのままanvilで起動した場合：
     ```typescript
     export const config = createConfig({
       chains: [sepolia],
@@ -242,15 +256,27 @@
       },
     });
     ```
+  4.2 localにsepoliaをコピーした場合：
+    ```typescript
+    export const config = createConfig({
+      chains: [anvil],
+      connectors: [],
+      ssr: true,
+      transports: {
+        [anvil.id]: http("http://localhost:8545"),
+      },
+    });
+    ```
 
-6.  `wagmi-project` の `src/wagmi.ts` の `textDAOFacade` を以下のように変更
+5.  `wagmi-project` の `src/wagmi.ts` の `textDAOFacade` を以下のように変更
 
     ```typescript
     export const TextDAOFacade = {
       address: process.env.NEXT_PUBLIC_CONTRACT_ADDR! as Address,
       abi,
-      account,
+      // account,
     } as const;
     ```
+    3つ目の引数「account」は，開発用にいちいちMetamaskが起動するのが鬱陶しい場合は，秘密鍵をsrc/lib/accout.ts に記述することで毎回のMetamask起動を回避できる．
+    コメントアウトすると毎回Metamaskを起動する．
 
-    ↑ `account` は `src/lib/account.ts` からインポートしてください
