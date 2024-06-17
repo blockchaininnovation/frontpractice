@@ -192,10 +192,18 @@
    ```
 
    ```cmd
-   cp .env.example .env.local
+   cp .env.sample .env.local
    ```
 
    各自 ↑ で作成した `.env.local` に TextDAO のアドレスを記載してください
+
+   ```cmd
+   cd src
+   cp wagmi.sample.ts wagmi.ts
+   ```
+
+   ↑ で作成した `wagmi.ts` に 接続したいネットワーク情報を記述してください．
+
 
    ```cmd
    npm run build
