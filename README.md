@@ -232,10 +232,10 @@
         ```
 
         2. もしくは，sepoliaをコピーしてローカルで起動したい場合は [Alchemy](https://www.alchemy.com/)（または他のノードサービス）から API キーを取得する
-        3.  TextDAO のディレクトリで以下のコマンドを実行
-        ```
-        anvil --fork-url https://eth-sepolia.g.alchemy.com/v2/<api_key>
-        ```
+            1.  TextDAO のディレクトリで以下のコマンドを実行
+                ```
+                anvil --fork-url https://eth-sepolia.g.alchemy.com/v2/<api_key>
+                ```
 
 
 2.  コンソールに出力された PrivateKey のどれか一つを TextDAOの`.env` ファイルに記載．
@@ -246,7 +246,7 @@
       ```
     2. コピー(一例)
       ```
-      DEPLOYER_PRIV_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+      DEPLOYER_PRIV_KEY=0xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
       ```
 3.  TextDAO のディレクトリで以下のコマンドを実行
 
@@ -258,17 +258,6 @@
     1. localでそのままanvilで起動したチェーンに接続する場合：
       ```typescript
       export const config = createConfig({
-        chains: [sepolia],
-        connectors: [],
-        ssr: true,
-        transports: {
-          [sepolia.id]: http("http://localhost:8545"),
-        },
-      });
-      ```
-    2. localにsepoliaをコピーしたチェーンに接続する場合：
-      ```typescript
-      export const config = createConfig({
         chains: [anvil],
         connectors: [],
         ssr: true,
@@ -277,16 +266,27 @@
         },
       });
       ```
-
-    3. sepoliaに接続する場合：
+    2. localにsepoliaをコピーしたチェーンに接続する場合：
       ```typescript
       export const config = createConfig({
         chains: [sepolia],
         connectors: [],
         ssr: true,
         transports: {
-          [sepolia.id]: http("https://sepolia.infura.io/v3/"),
-         ,
+          [sepolia.id]: http("http://localhost:8545"),
+        },
+      });
+      ```
+
+    3. sepoliaに接続する場合：
+      ```typescript
+      export const config = createConfig({
+        chains: [sepolia],
+        connectors: [],
+        ssr: true,
+        transports: {
+          [sepolia.id]: http("https://eth-sepolia.g.alchemy.com/v2/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"),
+        },
       });
       ```
 
