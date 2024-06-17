@@ -6,14 +6,14 @@ import { type Address } from "viem";
 import { abi } from "@/lib/abi/TextDAOFacade";
 import { account } from "@/lib/account";
 
-// export const config = createConfig({
-//   chains: [sepolia],
-//   connectors: [],
-//   ssr: true,
-//   transports: {
-//     [sepolia.id]: http("https://sepolia.infura.io/v3/"),
-//   },
-// });
+export const config = createConfig({
+  chains: [sepolia],
+  connectors: [],
+  ssr: true,
+  transports: {
+    [sepolia.id]: http(),
+  },
+});
 
 // export const config = createConfig({
 //   chains: [sepolia],
@@ -24,14 +24,14 @@ import { account } from "@/lib/account";
 //   },
 // });
 
-export const config = createConfig({
-  chains: [anvil],
-  connectors: [],
-  ssr: true,
-  transports: {
-    [anvil.id]: http("http://localhost:8545"),
-  },
-});
+// export const config = createConfig({
+//   chains: [anvil],
+//   connectors: [],
+//   ssr: true,
+//   transports: {
+//     [anvil.id]: http("http://localhost:8545"),
+//   },
+// });
 
 
 export const TextDAOFacade = {
