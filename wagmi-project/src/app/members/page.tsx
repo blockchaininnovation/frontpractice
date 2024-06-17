@@ -48,8 +48,8 @@ export default function ContractCallPage() {
     contracts: [
       {
         ...TextDAOFacade,
-        functionName: "getMember",
-        args: [BigInt(memberID)],
+        // TODO ここに関数名を入れる
+        // ここに引数を入れる．
       }
     ],
   });
