@@ -54,9 +54,9 @@ export default function DisplayResultProposals(returnData: DisplayResultProposal
     return null;
   }
 
-  console.log("result: %o", result);
+  // console.log("result: %o", result);
   if (Array.isArray(result) && result.length > 0 && result[0].hasOwnProperty('metadataURI')) {
-    console.log("result[0].metadataURI: %o", hexToAscii(result[0].metadataURI));
+    // console.log("result[0].metadataURI: %o", hexToAscii(result[0].metadataURI));
     const metadataURI = hexToAscii(result[0].metadataURI);
     const id = result[0].id + "";
     const currentScore = result[0].currentScore + "";
@@ -64,7 +64,7 @@ export default function DisplayResultProposals(returnData: DisplayResultProposal
   } else {
     const strInput = result + "";
     var num = parseInt(strInput);
-    console.log("num: %o", num);
+    // console.log("num: %o", num);
 
     if (!isNaN(num) && isFinite(num)) {
       num = num - 1;
