@@ -58,9 +58,8 @@ export default function DisplayResultProposals(returnData: DisplayResultProposal
   if (Array.isArray(result) && result.length > 0 && result[0].hasOwnProperty('metadataURI')) {
     // console.log("result[0].metadataURI: %o", hexToAscii(result[0].metadataURI));
     const metadataURI = hexToAscii(result[0].metadataURI);
-    const id = result[0].id + "";
     const currentScore = result[0].currentScore + "";
-    return <div>ID: {id}<br /> title: {metadataURI}<br />score: {currentScore} </div>;
+    return <div>title: {metadataURI}<br />score: {currentScore} </div>;
   } else {
     const strInput = result + "";
     var num = parseInt(strInput);
