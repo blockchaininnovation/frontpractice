@@ -33,3 +33,5 @@ Thumbs.db
 # package-lock.json
 # yarn.lock
 
+src/routes/uploads/*
+src/routes/known/*
