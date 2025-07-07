@@ -46,7 +46,8 @@ export default function ContractCallPage() {
     refetch: proposalRefetch,
     data: proposalData,
     isPending: isProposalPending,
-  } = useReadContracts({
+  } = useReadContracts(
+    {
     contracts: [
       {
         ...TextDAOFacade,
@@ -64,6 +65,7 @@ export default function ContractCallPage() {
   const [proposalHeaders, nextProposalId] = proposalData || [];
 
   function getProposalData(data: contractCallPidSchemaType) {
+    console.log("data.pid: %o", data.pid);
     setPid(data.pid);
     proposalRefetch();
   }

@@ -18,7 +18,7 @@ import {
 import { useToast } from "./ui/use-toast";
 
 import paths from "@/lib/paths";
-import logo from "public/rectangular_logo_only.png";
+import logo from "@/assets/rectangular_logo_only.png";
 
 export default function Navbar() {
   const account = useAccount();
