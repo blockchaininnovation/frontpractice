@@ -11,7 +11,8 @@ export default function Sidebar() {
         <Link href={paths.proposals()}>Proposals</Link>
         <Link href={paths.memberJoin()}>Member Join</Link>
         <Link href={paths.members()}>Members</Link>
-          <Link href={paths.vote()}>Vote</Link>
+        <Link href={paths.vote()}>Vote</Link>
+        <Link href={paths.onboardimage()}>Onboard Image</Link>
         </nav>
       </div>
       <div className="w-36">

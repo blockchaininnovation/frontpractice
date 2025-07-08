@@ -26,6 +26,9 @@ const paths = {
   members() {
     return "/members";
   },
+  onboardimage() {
+    return "/onboardimage";
+  },
 };
 
 export default paths;
