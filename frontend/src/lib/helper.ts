@@ -29,3 +29,14 @@ export function getCID(hexDigest: Hex) {
 
   return cid.toString(base32);
 }
+
+export async function generateCIDFromImageUrl(imageUrl: string): Promise<string> {
+  const response = await fetch(imageUrl);
+  if (!response.ok) throw new Error(`Failed to fetch image from ${imageUrl}`);
+
+  const arrayBuffer = await response.arrayBuffer();
+  const hashBuffer = await crypto.subtle.digest("SHA-256", arrayBuffer);
+  const hashHex = toHex(new Uint8Array(hashBuffer));
+
+  return getCID(hashHex);
+}

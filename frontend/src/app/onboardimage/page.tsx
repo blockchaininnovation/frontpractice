@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 
 import { TextDAOFacade } from "@/wagmi";
 import { useWriteContract } from "wagmi";
+import { generateCIDFromImageUrl } from "@/lib/helper";
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000";
 
@@ -64,7 +65,10 @@ export default function ContractCallPage() {
     }
 
     try {
-      const ipfsUrl = `${apiBaseUrl}${uploadResult.url}`;
+      const imageUrl = `${apiBaseUrl}${uploadResult.url}`;
+      const pseudoCID = await generateCIDFromImageUrl(imageUrl);
+      const ipfsUrl = `https://ipfs.io/ipfs/${pseudoCID}`;
+      
       const signatureBytes = uploadResult.signature;
 
       console.log("送信するIPFS URL:", ipfsUrl);
