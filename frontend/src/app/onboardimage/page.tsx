@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useReadContracts } from "wagmi";
+import axios from "axios";
 
-import { useReadContracts, type BaseError } from "wagmi";
-
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -15,28 +15,27 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Form } from "@/components/ui/form";
-import FormInput from "@/components/form-input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import DisplayResult from "@/components/display-results";
+import { Label } from "@/components/ui/label";
 
 import {
-  contractCallPidSchema,
   contractCallMemberIdSchema,
-  type contractCallPidSchemaType,
+  contractCallPidSchema,
   type contractCallMemberIdSchemaType,
+  type contractCallPidSchemaType,
 } from "@/lib/schema/schema";
 
 import { TextDAOFacade } from "@/wagmi";
 
-const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000";
 
 export default function ContractCallPage() {
   const [pid, setPid] = useState<number>(0);
   const [memberID, setMemberID] = useState<number>(0);
+
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadResult, setUploadResult] = useState<{ url?: string; signature?: string; error?: string } | null>(null);
 
   const pidForm = useForm<contractCallPidSchemaType>({
     resolver: zodResolver(contractCallPidSchema),
@@ -47,8 +46,6 @@ export default function ContractCallPage() {
     resolver: zodResolver(contractCallMemberIdSchema),
     defaultValues: { memberID: 0 },
   });
-
-  // Note: Only works with MultiCall contract (aggregator3)
 
   const {
     refetch: proposalRefetch,
@@ -95,86 +92,30 @@ export default function ContractCallPage() {
     ],
   });
 
-  const [proposalInfo, proposalHeaders, nextProposalId, proposalConfig] =
-    proposalData || [];
-
-  const [memberInfo, nextMemberId] = memberData || [];
-
-  function getProposalData(data: contractCallPidSchemaType) {
-    setPid(data.pid);
-    proposalRefetch();
-  }
-
-  function getMemberData(data: contractCallMemberIdSchemaType) {
-    setMemberID(data.memberID);
-    memberRefetch();
-  }
-
-  const [pingResult, setPingResult] = useState<any>(null);
-  const [echoMessage, setEchoMessage] = useState("");
-  const [echoResult, setEchoResult] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-
-  const handlePing = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(`${apiBaseUrl}/api/ping`);
-      const data = await res.json();
-      console.log("Ping response:", data);
-      setPingResult({
-        status: "success",
-        result: data,
-      });
-    } catch (err) {
-      setPingResult({
-        status: "failure",
-        error: "Failed to fetch ping",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleEcho = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(`${apiBaseUrl}/api/echo`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: echoMessage }),
-      });
-      const data = await res.json();
-      setEchoResult({
-        status: "success",
-        result: data,
-      });
-    } catch (err) {
-      setEchoResult({ status: "failure", error: "Failed to fetch echo" });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [uploadResult, setUploadResult] = useState<any>(null);
-  const [uploading, setUploading] = useState(false);
-
   const handleUpload = async () => {
     if (!selectedFile) return;
+
     setUploading(true);
-    const formData = new FormData();
-    formData.append("image", selectedFile);
+    setUploadResult(null);
 
     try {
-      const res = await fetch("http://localhost:4000/api/upload", {
-        method: "POST",
-        body: formData,
-      });
+      const formData = new FormData();
+      formData.append("image", selectedFile);
 
-      const data = await res.json();
-      setUploadResult(data);
-    } catch (err) {
-      setUploadResult({ error: "Upload failed" });
+      const res = await axios.post(`${apiBaseUrl}/api/upload`, formData);
+      const data = res.data;
+
+      if (res.status !== 200 || data.error) {
+        setUploadResult({ error: data.error || "アップロードに失敗しました。" });
+      } else {
+        setUploadResult({
+          url: data.url,
+          signature: data.signature,
+        });
+      }
+    } catch (error) {
+      console.error("アップロードエラー:", error);
+      setUploadResult({ error: "サーバーとの通信に失敗しました。" });
     } finally {
       setUploading(false);
     }
@@ -206,15 +147,21 @@ export default function ContractCallPage() {
 
             {uploadResult && (
               <div className="mt-4 space-y-2">
-                <Label>Upload Result:</Label>
                 {uploadResult.error ? (
                   <p className="text-red-500">{uploadResult.error}</p>
                 ) : (
-                  <img
-                    src={`http://localhost:4000${uploadResult.url}`}
-                    alt="Uploaded"
-                    className="w-48 border rounded"
-                  />
+                  <>
+                    <Label>アップロードされた画像:</Label>
+                    <img
+                      src={`${apiBaseUrl}${uploadResult.url}`}
+                      alt="Uploaded"
+                      className="w-48 border rounded"
+                    />
+                    <Label>署名:</Label>
+                    <p className="break-all font-mono text-sm bg-gray-100 p-2 rounded text-green-700">
+                      {uploadResult.signature}
+                    </p>
+                  </>
                 )}
               </div>
             )}
@@ -222,7 +169,9 @@ export default function ContractCallPage() {
         </CardContent>
 
         <CardFooter>
-          <span className="text-sm text-muted-foreground">実験用のAPIエンドポイントを叩いて結果を表示します。</span>
+          <span className="text-sm text-muted-foreground">
+            実験用のAPIエンドポイントを叩いて画像と署名を取得します。
+          </span>
         </CardFooter>
       </Card>
     </div>

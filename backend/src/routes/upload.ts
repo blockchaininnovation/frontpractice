@@ -81,15 +81,14 @@ router.post('/', upload.single('image'), async (req, res) => {
     const signature = keyPair.sign(hash);
     const derSignature = signature.toDER('hex');
 
-    // --- SVGウォーターマーク生成 ---
     const watermark = Buffer.from(
       `<svg width="400" height="50">
-     <text x="0" y="20" font-size="16" fill="white" opacity="0.5">Verified: 0x${derSignature}</text>
-   </svg>`
+       <text x="0" y="20" font-size="16" fill="gray" opacity="0.5">Verified</text>
+     </svg>`
     );
 
     const outputBuffer = await sharp(req.file.buffer)
-      .composite([{ input: watermark, gravity: 'southwest' }])
+      .composite([{ input: watermark, gravity: 'southeast' }])
       .png()
       .toBuffer();
 
@@ -97,7 +96,10 @@ router.post('/', upload.single('image'), async (req, res) => {
     const filePath = path.join(uploadsDir, fileName);
     fs.writeFileSync(filePath, outputBuffer);
 
-    return res.json({ url: `/uploads/${fileName}` });
+    return res.json({
+      url: `/uploads/${fileName}`,
+      signature: `0x${derSignature}`
+    });
   } catch (err) {
     console.error('Error during upload processing:', err);
     return res.status(500).json({ error: 'Internal server error' });
