@@ -1,10 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useReadContracts } from "wagmi";
 import axios from "axios";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -18,79 +15,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import {
-  contractCallMemberIdSchema,
-  contractCallPidSchema,
-  type contractCallMemberIdSchemaType,
-  type contractCallPidSchemaType,
-} from "@/lib/schema/schema";
-
 import { TextDAOFacade } from "@/wagmi";
+import { useWriteContract } from "wagmi";
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000";
 
 export default function ContractCallPage() {
-  const [pid, setPid] = useState<number>(0);
-  const [memberID, setMemberID] = useState<number>(0);
-
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadResult, setUploadResult] = useState<{ url?: string; signature?: string; error?: string } | null>(null);
 
-  const pidForm = useForm<contractCallPidSchemaType>({
-    resolver: zodResolver(contractCallPidSchema),
-    defaultValues: { pid },
-  });
-
-  const memberIdForm = useForm<contractCallMemberIdSchemaType>({
-    resolver: zodResolver(contractCallMemberIdSchema),
-    defaultValues: { memberID: 0 },
-  });
-
-  const {
-    refetch: proposalRefetch,
-    data: proposalData,
-    isPending: isProposalPending,
-  } = useReadContracts({
-    contracts: [
-      {
-        ...TextDAOFacade,
-        functionName: "getProposal",
-        args: [BigInt(pid)],
-      },
-      {
-        ...TextDAOFacade,
-        functionName: "getProposalHeaders",
-        args: [BigInt(pid)],
-      },
-      {
-        ...TextDAOFacade,
-        functionName: "getNextProposalId",
-      },
-      {
-        ...TextDAOFacade,
-        functionName: "getProposalsConfig",
-      },
-    ],
-  });
-
-  const {
-    refetch: memberRefetch,
-    data: memberData,
-    isPending: isMemberPending,
-  } = useReadContracts({
-    contracts: [
-      {
-        ...TextDAOFacade,
-        functionName: "getMember",
-        args: [BigInt(memberID)],
-      },
-      {
-        ...TextDAOFacade,
-        functionName: "getNextMemberId",
-      },
-    ],
-  });
 
   const handleUpload = async () => {
     if (!selectedFile) return;
@@ -118,6 +52,35 @@ export default function ContractCallPage() {
       setUploadResult({ error: "サーバーとの通信に失敗しました。" });
     } finally {
       setUploading(false);
+    }
+  };
+
+  const { writeContractAsync } = useWriteContract();
+
+  const handleRegisterIcon = async () => {
+    if (!uploadResult?.url || !uploadResult?.signature) {
+      alert("画像または署名が見つかりません。先にアップロードを完了してください。");
+      return;
+    }
+
+    try {
+      const ipfsUrl = `${apiBaseUrl}${uploadResult.url}`;
+      const signatureBytes = uploadResult.signature;
+
+      console.log("送信するIPFS URL:", ipfsUrl);
+      console.log("送信する署名:", signatureBytes);
+
+      const tx = await writeContractAsync({
+        ...TextDAOFacade,
+        functionName: "onboardImage",
+        args: [ipfsUrl, signatureBytes],
+      });
+
+      console.log("Tx sent:", tx);
+      alert("アイコン登録トランザクションが送信されました。");
+    } catch (error: any) {
+      console.error("コントラクト呼び出しエラー:", error);
+      alert(`登録に失敗しました: ${error.message || "不明なエラー"}`);
     }
   };
 
@@ -166,7 +129,16 @@ export default function ContractCallPage() {
               </div>
             )}
           </div>
+
+          {/* 実行ボタン（アップロード成功時のみ有効） */}
+          <div className="pt-4">
+            <Button onClick={handleRegisterIcon} 
+              disabled={!(uploadResult?.url && uploadResult?.signature)}>
+              画像と署名を使って登録する
+            </Button>
+          </div>
         </CardContent>
+
 
         <CardFooter>
           <span className="text-sm text-muted-foreground">
