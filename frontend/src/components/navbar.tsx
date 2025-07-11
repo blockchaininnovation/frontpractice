@@ -95,16 +95,17 @@ export default function Navbar() {
           )}
         </div>
       </header>
-      {/* {account.status === "connected" && account.chainId !== 11155111 && (
+      {account.status === "connected" && account.chainId !== 31337 && (
         <Alert variant="destructive" className="w-80 right-0 mt-10 absolute">
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Chain Not Supported</AlertTitle>
+          <AlertTitle>⚠️ 非開発ネットワークに接続中</AlertTitle>
           <AlertDescription>
-            Current Chain is not supported. <br />
-            Make sure to use Sepolia.
+            現在のチェーンは開発用Anvilではありません。<br />
+            想定外のネットワークに接続されている可能性があります。<br />
+            本番や第三者ノードではデータ流出のリスクがあります。
           </AlertDescription>
         </Alert>
-      )} */}
+      )}
     </div>
   );
 }
