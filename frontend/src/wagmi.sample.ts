@@ -4,9 +4,8 @@ import { mock } from "wagmi/connectors";
 
 import { type Address } from "viem";
 import { account } from "@/lib/account";
-import TextDAOFacadeJson from "@/lib/abi/TextDAOFacade.json";
 
-const abi = TextDAOFacadeJson.abi;
+import { abi } from "@/lib/abi/TextDAOFacade";
 
 // export const config = createConfig({
 //   chains: [sepolia],
