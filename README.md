@@ -67,12 +67,6 @@
 
 - ### Windows
 
-  - #### インストーラーを使用する場合
-
-    1. [ここ](https://github.com/coreybutler/nvm-windows/releases/download/1.1.12/nvm-setup.zip)からインストーラーをダウンロード ( zip ファイル )
-
-    2. zip を展開し、インストーラーに従ってください ( 全て `Next` で進んで構いません、設定を変えたい人はご自由にどうぞ )
-
   - #### WSL2 ( Windows Subsystem for Linux 2 ) にインストールする場合
 
     - ディストリビューション `Ubuntu:22.04`
@@ -119,13 +113,13 @@
 
 - Mac はターミナル、Windows はコマンドプロンプト ( または WSL ) を開いておいてください
 
-1. 以下のコマンドを実行し、`Node.js: 20.14.0` をインストール
+1. 以下のコマンドを実行し、`Node.js: v24.4.0` をインストール
 
    ```cmd
-   nvm install 20.14.0
+   nvm install stable
    ```
 
-2. 以下のコマンドを実行し、`Node.js: 20.14.0` を使用しているか確認 ( `v20.14.0` と表示されたら OK )
+2. 以下のコマンドを実行し、`Node.js: v24.4.0` を使用しているか確認 ( `v24.4.0` と表示されたら OK )
 
    ```cmd
    node --version
@@ -134,7 +128,7 @@
    - 違うバージョンが表示される場合、以下のコマンドを実行してください
 
      ```cmd
-     nvm use 20.14.0
+     nvm use v24.4.0
      ```
 
 - また以下のコマンドを実行し、`npm` があることも確認してください
@@ -153,38 +147,23 @@
 
 - Indexer 無し
 - DB 無し
-- Backend ( Server, Server Action ) 無し
+- Backend あり
 
 - 仕様変更で使わなくなったパッケージ、ファイルも一部残っています
 
-## 使用パッケージ
-
-- `wagmi` : latest ( 10.7.0 )
-- `tailwindcss` : ^3.4.3
-- `typescript` : ^5.2.2
-- `shadcn-ui` : 0.8.0
-- `react-hook-form`: ^7.51.5
 
 ## 実行手順
 
 1. レポジトリをクローンする
 
-   - SSH を設定してある場合
-
      ```cmd
      git clone git@github.com:blockchaininnovation/frontpractice.git
-     ```
-
-   - HTTPS を使用する場合
-
-     ```cmd
-     git clone https://github.com/blockchaininnovation/frontpractice.git
      ```
 
 2. クローンしたディレクトリに移動し、以下のコマンドを実行
 
    ```cmd
-   cd wagmi-project
+   cd frontend
    ```
 
    ```cmd
@@ -226,17 +205,10 @@
 ## ローカルの TextDAO を使用する場合
 1. ブロックチェーン起動
     1.  localで開発用のブロックチェーンを起動
-        1.  TextDAO のディレクトリで以下のコマンドを実行
+        TextDAO のディレクトリで以下のコマンドを実行
         ```
         anvil
         ```
-
-        2. もしくは，sepoliaをコピーしてローカルで起動したい場合は [Alchemy](https://www.alchemy.com/)（または他のノードサービス）から API キーを取得する
-            1.  TextDAO のディレクトリで以下のコマンドを実行
-                ```
-                anvil --fork-url https://eth-sepolia.g.alchemy.com/v2/<api_key>
-                ```
-
 
 2.  コンソールに出力された PrivateKey のどれか一つを TextDAOの`.env` ファイルに記載．
     1. .envファイルがない場合は以下：
@@ -266,19 +238,8 @@
         },
       });
       ```
-    2. localにsepoliaをコピーしたチェーンに接続する場合：
-      ```typescript
-      export const config = createConfig({
-        chains: [sepolia],
-        connectors: [],
-        ssr: true,
-        transports: {
-          [sepolia.id]: http("http://localhost:8545"),
-        },
-      });
-      ```
 
-    3. sepoliaに接続する場合：
+    2. (補足) sepoliaに接続する場合：
       ```typescript
       export const config = createConfig({
         chains: [sepolia],
