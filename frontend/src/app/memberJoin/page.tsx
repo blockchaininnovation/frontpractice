@@ -2,9 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-
-import { useWriteContract, type BaseError } from "wagmi";
-import { getAddress, toHex } from "viem";
+import { useWriteContract, useReadContract, type BaseError } from "wagmi";
+import { getAddress } from "viem";
 
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -20,13 +19,6 @@ import { TextDAOFacade } from "@/wagmi";
 
 const INPUTS = [
   {
-    name: "candidates.id",
-    label: "Member ID",
-    placeholder: "123",
-    _type: "number",
-    description: "希望のメンバーIDを入力してください。",
-  },
-  {
     name: "candidates.addr",
     label: "Member Address",
     placeholder: "0xf39F...2266",
@@ -38,13 +30,29 @@ const INPUTS = [
 const DEFAULT_VALUES = {
   pid: 0,
   candidates: {
-    id: 0,
+    id: 0, // 実際には使わないが、スキーマと整合性のために保持
     addr: "",
   },
 };
 
 export default function MemberJoinPage() {
   const { toast } = useToast();
+
+  const form = useForm<memberJoinSchemaType>({
+    resolver: zodResolver(memberJoinSchema),
+    defaultValues: DEFAULT_VALUES,
+  });
+
+  // 🔍 getNextMemberId 読み取り
+  const {
+    data: nextMemberId,
+    isLoading: isReading,
+    refetch,
+  } = useReadContract({
+    ...TextDAOFacade,
+    functionName: "getNextMemberId",
+  });
+
   const { isPending, writeContract } = useWriteContract({
     mutation: {
       retry: 3,
@@ -56,17 +64,15 @@ export default function MemberJoinPage() {
     },
   });
 
-  const form = useForm<memberJoinSchemaType>({
-    resolver: zodResolver(memberJoinSchema),
-    defaultValues: DEFAULT_VALUES,
-  });
+  async function handleSubmit(data: memberJoinSchemaType) {
+    const nextId = BigInt(nextMemberId ?? 0);
 
-  function handleSubmit(data: memberJoinSchemaType) {
     const args = {
       _candidates: {
-        id: BigInt(data.candidates.id),
+        id: nextId,
         addr: getAddress(data.candidates.addr),
-        metadataURI: toHex("0", { size: 32 }),
+        iconURI: "",
+        iconVerifiedSignature: "",
       },
     };
 
@@ -77,11 +83,13 @@ export default function MemberJoinPage() {
         args: [[args._candidates]],
       },
       {
-        onSuccess: (data) => {
+        onSuccess: (tx) => {
           toast({
             title: "Transaction confirmed",
-            description: `Transaction Hash: ${data}`,
+            description: `Transaction Hash: ${tx}`,
           });
+          refetch(); // 次のIDを更新
+          form.reset(); // フォーム初期化
         },
         onError: (error) => {
           toast({
@@ -97,6 +105,10 @@ export default function MemberJoinPage() {
   return (
     <div className="px-20 py-5">
       <h1 className="text-xl font-bold py-10">Member Join Page</h1>
+      <p className="mb-4">
+        次のMember ID:{" "}
+        <span className="font-mono font-semibold">{String(nextMemberId ?? "-")}</span>
+      </p>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
           {INPUTS.map((input) => (
@@ -110,7 +122,7 @@ export default function MemberJoinPage() {
               description={input.description}
             />
           ))}
-          <Button type="submit" disabled={isPending}>
+          <Button type="submit" disabled={isPending || isReading}>
             {isPending ? "Confirming..." : "Submit"}
           </Button>
         </form>

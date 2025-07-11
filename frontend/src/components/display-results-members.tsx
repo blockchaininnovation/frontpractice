@@ -54,7 +54,7 @@ export default function DisplayResultMembers(returnData: DisplayResultMembersPro
       if (result.id >= Number.MAX_SAFE_INTEGER) {
         return <div><span style={{ color: 'red' }}>No data found</span></div>;
       }
-      return <div>ID: {result.id + ""}<br />address: {result.addr}</div>;
+      return <div>ID: {result.id + ""}<br />address: {result.addr}<br/>iconURI: {result.iconURI}<br/>sign for icon: {result.iconVerifiedSignature}</div>;
     }
   } else {
     return <div><span style={{ color: 'red' }}>No data found</span></div>;

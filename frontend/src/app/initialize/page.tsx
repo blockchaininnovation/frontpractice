@@ -25,7 +25,7 @@ const INPUTS = [
     placeholder: "0xf39F...2266, 0x88F6F...27279c, ...",
     _type: "text",
     description:
-      "初期メンバーのアドレスを入力してください。カンマ区切りで複数のアドレスを指定できます。",
+      "(特に理由がなければ、デフォルトのままで問題ありません。)初期メンバーのアドレスを入力してください。カンマ区切りで複数のアドレスを指定できます。",
   },
   {
     name: "pConfigSchema.expiryDuration",
@@ -62,7 +62,7 @@ const INPUTS = [
 ];
 
 const DEFAULT_VALUES = {
-  initialMembers: "",
+  initialMembers: "0x0000000000000000000000000000000000000000",
   pConfigSchema: {
     expiryDuration: 1000,
     tallyInterval: 1000,

@@ -26,7 +26,7 @@ const INPUTS = [
     label: "Title",
     placeholder: "Proposal Title",
     _type: "text",
-    description: "提案のタイトルを入力してください。",
+    description: "提案のタイトルを入力してください。(英数字のみ)",
   },
 ];
 

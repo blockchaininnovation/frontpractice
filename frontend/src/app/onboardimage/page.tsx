@@ -84,7 +84,7 @@ export default function OnboardImagePage() {
 
     try {
       const imageUrl = `${apiBaseUrl}${uploadResult.url}`;
-      const pseudoCID = await generateCIDFromImageUrl(imageUrl);
+      const pseudoCID = await generateCIDFromImageUrl(imageUrl) + " (dummy)";
       const ipfsUrl = `https://ipfs.io/ipfs/${pseudoCID}`;
 
       await writeContractAsync({
