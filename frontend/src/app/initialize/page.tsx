@@ -27,48 +27,10 @@ const INPUTS = [
     description:
       "初期メンバーのアドレスを入力してください。カンマ区切りで複数のアドレスを指定できます。",
   },
-  {
-    name: "pConfigSchema.expiryDuration",
-    label: "Expiry Duration",
-    placeholder: "123",
-    _type: "number",
-    description:
-      "投票の有効期限を入力してください。単位はブロック秒です。( 1 == 1 second )",
-  },
-  {
-    name: "pConfigSchema.tallyInterval",
-    label: "Tally Interval",
-    placeholder: "123",
-    _type: "number",
-    description:
-      "投票の集計間隔を入力してください。単位はブロック秒です。( 1 == 1 second )",
-  },
-  {
-    name: "pConfigSchema.repsNum",
-    label: "Reps Num",
-    placeholder: "123",
-    _type: "number",
-    description:
-      "Reps はある proposal に fork, vote 可能な DAO 参加者のサブセットです。人数を指定してください。",
-  },
-  {
-    name: "pConfigSchema.quorumScore",
-    label: "Quorum Score",
-    placeholder: "123",
-    _type: "number",
-    description:
-      "Quorum Score は proposal の可決に必要な最低限の得票数です。スコアを指定してください。",
-  },
 ];
 
 const DEFAULT_VALUES = {
   initialMembers: "",
-  pConfigSchema: {
-    expiryDuration: 0,
-    tallyInterval: 0,
-    repsNum: 0,
-    quorumScore: 0,
-  },
 };
 
 export default function InitializePage() {
@@ -95,19 +57,13 @@ export default function InitializePage() {
         .replace(/\s/g, "")
         .split(",")
         .map((address) => getAddress(address)),
-      pConfigSchema: {
-        expiryDuration: BigInt(data.pConfigSchema.expiryDuration),
-        tallyInterval: BigInt(data.pConfigSchema.tallyInterval),
-        repsNum: BigInt(data.pConfigSchema.repsNum),
-        quorumScore: BigInt(data.pConfigSchema.quorumScore),
-      },
     };
 
     writeContract(
       {
         ...TextDAOFacade,
-        functionName: "initialize",
-        args: [args.initialMembers, args.pConfigSchema],
+        functionName: "initializeSimple",
+        args: [args.initialMembers],
       },
       {
         onSuccess: (data) => {

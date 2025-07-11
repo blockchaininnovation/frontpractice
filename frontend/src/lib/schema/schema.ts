@@ -5,16 +5,8 @@ import { toHex, size } from "viem";
 import { uint256Schema, addressSchema, addressArraySchema } from "./common";
 
 // Initialize schema
-export const pConfigSchema = z.object({
-  expiryDuration: uint256Schema,
-  tallyInterval: uint256Schema,
-  repsNum: uint256Schema,
-  quorumScore: uint256Schema,
-});
-
 export const initializeSchema = z.object({
-  initialMembers: addressArraySchema,
-  pConfigSchema,
+  initialMembers: addressArraySchema
 });
 
 // Proposal schema
