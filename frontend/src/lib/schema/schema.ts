@@ -72,6 +72,10 @@ export const contractCallMemberIdSchema = z.object({
   memberID: uint256Schema,
 });
 
+export const onboardImageSchema = z.object({
+  image: z.instanceof(File, { message: "画像ファイルが必要です" }),
+});
+
 // Types
 export type initializeSchemaType = z.infer<typeof initializeSchema>;
 export type proposalSchemaType = z.infer<typeof proposalSchema>;
@@ -83,3 +87,4 @@ export type contractCallPidSchemaType = z.infer<typeof contractCallPidSchema>;
 export type contractCallMemberIdSchemaType = z.infer<
   typeof contractCallMemberIdSchema
 >;
+export type onboardImageSchemaType = z.infer<typeof onboardImageSchema>;

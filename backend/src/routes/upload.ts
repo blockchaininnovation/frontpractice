@@ -81,12 +81,16 @@ router.post('/', upload.single('image'), async (req, res) => {
     const signature = keyPair.sign(hash);
     const derSignature = signature.toDER('hex');
 
+    const metadata = await sharp(req.file.buffer).metadata();
+    const imageWidth = metadata.width || 0;
+    const imageHeight = metadata.height || 0;
+    const watermarkWidth = Math.min(400, imageWidth);
+    const watermarkHeight = Math.min(50, imageHeight);
     const watermark = Buffer.from(
-      `<svg width="400" height="50">
-       <text x="0" y="20" font-size="16" fill="gray" opacity="0.5">Verified</text>
-     </svg>`
+      `<svg width="${watermarkWidth}" height="${watermarkHeight}">
+         <text x="0" y="20" font-size="16" fill="gray" opacity="0.5">Verified</text>
+       </svg>`
     );
-
     const outputBuffer = await sharp(req.file.buffer)
       .composite([{ input: watermark, gravity: 'southeast' }])
       .png()
