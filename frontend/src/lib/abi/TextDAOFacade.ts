@@ -646,19 +646,6 @@ export const abi =
   },
   {
     "type": "function",
-    "name": "initializeSimple",
-    "inputs": [
-      {
-        "name": "initialMembers",
-        "type": "address[]",
-        "internalType": "address[]"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "memberJoin",
     "inputs": [
       {
