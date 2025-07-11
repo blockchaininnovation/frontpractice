@@ -155,30 +155,6 @@ export default function ContractCallPage() {
     }
   };
 
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [uploadResult, setUploadResult] = useState<any>(null);
-  const [uploading, setUploading] = useState(false);
-
-  const handleUpload = async () => {
-    if (!selectedFile) return;
-    setUploading(true);
-    const formData = new FormData();
-    formData.append("image", selectedFile);
-
-    try {
-      const res = await fetch("http://localhost:4000/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await res.json();
-      setUploadResult(data);
-    } catch (err) {
-      setUploadResult({ error: "Upload failed" });
-    } finally {
-      setUploading(false);
-    }
-  };
 
   return (
     <div className="px-20 py-5">
@@ -295,34 +271,6 @@ export default function ContractCallPage() {
               {loading ? "Posting..." : "Call POST /api/echo"}
             </Button>
             <DisplayResult {...echoResult} />
-          </div>
-          {/* 画像アップロードフォーム */}
-          <div className="space-y-2">
-            <Label htmlFor="upload">画像アップロード</Label>
-            <Input
-              id="upload"
-              type="file"
-              accept="image/*"
-              onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-            />
-            <Button onClick={handleUpload} disabled={!selectedFile || uploading}>
-              {uploading ? "Uploading..." : "Upload Image"}
-            </Button>
-
-            {uploadResult && (
-              <div className="mt-4 space-y-2">
-                <Label>Upload Result:</Label>
-                {uploadResult.error ? (
-                  <p className="text-red-500">{uploadResult.error}</p>
-                ) : (
-                  <img
-                    src={`http://localhost:4000${uploadResult.url}`}
-                    alt="Uploaded"
-                    className="w-48 border rounded"
-                  />
-                )}
-              </div>
-            )}
           </div>
         </CardContent>
 

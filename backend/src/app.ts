@@ -3,6 +3,7 @@ import cors from 'cors';
 import path from 'path';
 
 import pingRouter from './routes/ping';
+import echoRouter from './routes/echo';
 import uploadRouter from './routes/upload';
 
 const PORT = process.env.PORT || 4000;
@@ -17,6 +18,7 @@ app.listen(PORT, () => {
 });
 
 app.use('/api/ping', pingRouter);
+app.use('/api/echo', echoRouter);
 app.use('/api/upload', uploadRouter);
 
 // 静的ファイル
