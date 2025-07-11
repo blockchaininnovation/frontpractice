@@ -57,7 +57,7 @@ const INPUTS = [
     placeholder: "123",
     _type: "number",
     description:
-      "Quorum Score は proposal の可決に必要な最低限の得票数です。スコアを指定してください。",
+      "(特に理由がなければ、デフォルトのままで問題ありません。) Quorum Score は proposal の可決に必要な最低限の得票数です。スコアを指定してください。",
   },
 ];
 
