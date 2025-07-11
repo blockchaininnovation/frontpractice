@@ -3,8 +3,10 @@ import { mainnet, sepolia, localhost, anvil } from "wagmi/chains";
 import { mock } from "wagmi/connectors";
 
 import { type Address } from "viem";
-import { abi } from "@/lib/abi/TextDAOFacade";
 import { account } from "@/lib/account";
+import TextDAOFacadeJson from "@/lib/abi/TextDAOFacade.json";
+
+const abi = TextDAOFacadeJson.abi;
 
 // export const config = createConfig({
 //   chains: [sepolia],
