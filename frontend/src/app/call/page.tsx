@@ -108,6 +108,7 @@ export default function ContractCallPage() {
   function getMemberData(data: contractCallMemberIdSchemaType) {
     setMemberID(data.memberID);
     memberRefetch();
+    console.log("memberInfo:", memberInfo);
   }
 
   const [pingResult, setPingResult] = useState<any>(null);

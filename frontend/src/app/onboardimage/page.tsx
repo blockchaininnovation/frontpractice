@@ -17,6 +17,8 @@ import { Label } from "@/components/ui/label";
 
 import { TextDAOFacade } from "@/wagmi";
 import { useWriteContract } from "wagmi";
+import { useWatchContractEvent } from "wagmi";
+
 import { generateCIDFromImageUrl } from "@/lib/helper";
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000";
@@ -68,7 +70,7 @@ export default function ContractCallPage() {
       const imageUrl = `${apiBaseUrl}${uploadResult.url}`;
       const pseudoCID = await generateCIDFromImageUrl(imageUrl);
       const ipfsUrl = `https://ipfs.io/ipfs/${pseudoCID}`;
-      
+
       const signatureBytes = uploadResult.signature;
 
       console.log("送信するIPFS URL:", ipfsUrl);
@@ -86,7 +88,21 @@ export default function ContractCallPage() {
       console.error("コントラクト呼び出しエラー:", error);
       alert(`登録に失敗しました: ${error.message || "不明なエラー"}`);
     }
+
   };
+
+  useWatchContractEvent({
+    ...TextDAOFacade,
+    eventName: "MemberIconRegistered",
+    listener(log) {
+      console.log("✅ Event received:", log);
+      const memberId = log[0].args.memberId;
+      const account = log[0].args.account;
+      const ipfsUrl = log[0].args.ipfsUrl;
+
+      alert(`登録完了！\nID: ${memberId}\nAccount: ${account}\nIPFS: ${ipfsUrl}`);
+    },
+  });
 
   return (
     <div className="px-20 py-5">
@@ -136,7 +152,7 @@ export default function ContractCallPage() {
 
           {/* 実行ボタン（アップロード成功時のみ有効） */}
           <div className="pt-4">
-            <Button onClick={handleRegisterIcon} 
+            <Button onClick={handleRegisterIcon}
               disabled={!(uploadResult?.url && uploadResult?.signature)}>
               画像と署名を使って登録する
             </Button>
