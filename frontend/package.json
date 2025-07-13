@@ -1,0 +1,50 @@
+{
+  "name": "wagmi-project",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.1.1",
+    "@radix-ui/react-label": "^2.1.7",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-tabs": "^1.1.12",
+    "@radix-ui/react-toast": "^1.2.14",
+    "@radix-ui/react-tooltip": "^1.2.7",
+    "@tanstack/react-query": "^5.81.5",
+    "axios": "^1.10.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.525.0",
+    "multiformats": "^13.3.7",
+    "next": "15.3.5",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-hook-form": "^7.59.0",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss": "^3.4.17",
+    "tailwindcss-animate": "^1.0.7",
+    "viem": "^2.31.6",
+    "wagmi": "^2.15.6",
+    "zod": "^3.25.72"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.10",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@wagmi/cli": "^2.3.1",
+    "autoprefixer": "^10.4.21",
+    "bufferutil": "^4.0.9",
+    "encoding": "^0.1.13",
+    "lokijs": "^1.5.12",
+    "pino-pretty": "^13.0.0",
+    "postcss": "^8.5.6",
+    "supports-color": "^10.0.0",
+    "typescript": "^5.8.3",
+    "utf-8-validate": "^6.0.5"
+  }
+}
