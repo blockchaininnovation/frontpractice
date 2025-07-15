@@ -76,11 +76,6 @@ router.post('/', upload.single('image'), async (req, res) => {
 
     const keyPair = loadPrivateKeyFromEnv(); // <- あなたが定義した関数を呼ぶ
 
-    // --- 署名処理 ---
-    const hash = crypto.createHash('sha256').update(req.file.buffer).digest(); // ← ファイルバッファの SHA-256 を取る
-    const signature = keyPair.sign(hash);
-    const derSignature = signature.toDER('hex');
-
     const metadata = await sharp(req.file.buffer).metadata();
     const imageWidth = metadata.width || 0;
     const imageHeight = metadata.height || 0;
@@ -100,6 +95,10 @@ router.post('/', upload.single('image'), async (req, res) => {
     const filePath = path.join(uploadsDir, fileName);
     fs.writeFileSync(filePath, outputBuffer);
 
+    // --- 署名処理 ---
+    const hash = crypto.createHash('sha256').update(outputBuffer).digest(); // ← ファイルバッファの SHA-256 を取る
+    const signature = keyPair.sign(hash);
+    const derSignature = signature.toDER('hex');
     return res.json({
       url: `/uploads/${fileName}`,
       signature: `0x${derSignature}`
